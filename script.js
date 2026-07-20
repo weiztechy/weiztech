@@ -7,15 +7,29 @@
 
   const menuButton = $(".menu-toggle");
   const nav = $("#main-nav");
-  menuButton?.addEventListener("click", () => {
-    const open = nav.classList.toggle("open");
+  function setMenu(open) {
+    if (!nav || !menuButton) return;
+    nav.classList.toggle("open", open);
+    document.body.classList.toggle("nav-open", open);
     menuButton.setAttribute("aria-expanded", String(open));
     menuButton.setAttribute("aria-label", open ? "Menü schließen" : "Menü öffnen");
+  }
+
+  menuButton?.addEventListener("click", event => {
+    event.stopPropagation();
+    setMenu(!nav.classList.contains("open"));
   });
-  $$("#main-nav a").forEach(link => link.addEventListener("click", () => {
-    nav.classList.remove("open");
-    menuButton?.setAttribute("aria-expanded", "false");
-  }));
+  $$("#main-nav a").forEach(link => link.addEventListener("click", () => setMenu(false)));
+  document.addEventListener("click", event => {
+    if (!nav?.classList.contains("open")) return;
+    if (!nav.contains(event.target) && !menuButton?.contains(event.target)) setMenu(false);
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") setMenu(false);
+  });
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 760) setMenu(false);
+  });
 
   const observer = "IntersectionObserver" in window
     ? new IntersectionObserver(entries => entries.forEach(entry => {
@@ -51,6 +65,24 @@
     contactConfigured = true;
   }
   if (contactConfigured && setupNote) setupNote.hidden = true;
+
+  const mobileCta = $(".mobile-cta");
+  const heroActions = $(".hero-actions");
+  const contactSection = $("#kontakt");
+  const footer = $(".site-footer");
+  if (mobileCta && "IntersectionObserver" in window) {
+    const visibleTargets = new Set();
+    const ctaObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) visibleTargets.add(entry.target);
+        else visibleTargets.delete(entry.target);
+      });
+      mobileCta.classList.toggle("is-hidden", visibleTargets.size > 0);
+    }, { threshold: 0.08 });
+    if (heroActions) ctaObserver.observe(heroActions);
+    if (contactSection) ctaObserver.observe(contactSection);
+    if (footer) ctaObserver.observe(footer);
+  }
 
   const form = $("#contact-form");
   const status = $("#form-status");

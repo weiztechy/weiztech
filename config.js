@@ -14,7 +14,7 @@ window.WEIZTECH_CONFIG = {
   streetAddress: "",
   postalCode: "",
   city: "",
-  websiteUrl: "",
+  websiteUrl: "https://weiztech.store",
   serviceRadius: "Weiz und nähere Umgebung",
   backendUrl: "https://kpjbaramdzvjyfkjrqte.supabase.co/functions/v1/submit-request"
 };
