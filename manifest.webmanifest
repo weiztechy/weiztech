@@ -1,0 +1,10 @@
+{
+  "name": "WeizTech",
+  "short_name": "WeizTech",
+  "description": "Computerhilfe vor Ort in Weiz und Umgebung",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0878f9",
+  "icons": [{"src":"assets/favicon.png","sizes":"512x512","type":"image/png"}]
+}
