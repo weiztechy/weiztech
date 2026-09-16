@@ -67,21 +67,13 @@
   if (contactConfigured && setupNote) setupNote.hidden = true;
 
   const mobileCta = $(".mobile-cta");
-  const heroActions = $(".hero-actions");
-  const contactSection = $("#kontakt");
-  const footer = $(".site-footer");
-  if (mobileCta && "IntersectionObserver" in window) {
-    const visibleTargets = new Set();
-    const ctaObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) visibleTargets.add(entry.target);
-        else visibleTargets.delete(entry.target);
-      });
-      mobileCta.classList.toggle("is-hidden", visibleTargets.size > 0);
-    }, { threshold: 0.08 });
-    if (heroActions) ctaObserver.observe(heroActions);
-    if (contactSection) ctaObserver.observe(contactSection);
-    if (footer) ctaObserver.observe(footer);
+  if (mobileCta) {
+    const syncCtaSize = () => {
+      mobileCta.classList.toggle("is-compact", window.scrollY > 140);
+      mobileCta.classList.remove("is-hidden");
+    };
+    syncCtaSize();
+    window.addEventListener("scroll", syncCtaSize, { passive: true });
   }
 
   const form = $("#contact-form");
