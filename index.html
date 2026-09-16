@@ -9,11 +9,12 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="WeizTech – IT-Hilfe vor Ort in Weiz">
   <meta property="og:description" content="Professionelle Computerhilfe vor Ort. Klar, persönlich und transparent.">
-  <meta property="og:image" content="assets/weiztech-logo.png">
+  <meta property="og:image" content="assets/weiztech-logo-new.png">
   <title>WeizTech – IT-Hilfe vor Ort in Weiz</title>
-  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="preload" as="image" href="assets/weiztech-logo-new.png" fetchpriority="high">
+  <link rel="icon" href="assets/favicon-new.png" type="image/png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=4.0">
+  <link rel="stylesheet" href="styles.css?v=5.0">
   <script src="config.js?v=2.1" defer></script>
   <script src="script.js?v=2.1" defer></script>
 </head>
@@ -40,7 +41,7 @@
   <header class="site-header" id="top">
     <div class="container header-inner">
       <a class="brand" href="#top" aria-label="WeizTech Startseite">
-        <img class="brand-logo" src="assets/weiztech-logo.png" alt="WeizTech" width="220" height="48">
+        <img class="brand-logo" fetchpriority="high" src="assets/weiztech-logo-new.png" alt="WeizTech" width="220" height="48">
       </a>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Menü öffnen">
@@ -262,7 +263,7 @@
       <div class="container about-grid">
         <div class="about-brand reveal">
           <span class="about-index">WEIZTECH / 02</span>
-          <img src="assets/weiztech-logo.png" alt="WeizTech">
+          <img fetchpriority="high" src="assets/weiztech-logo-new.png" alt="WeizTech">
           <span>Persönliche IT-Hilfe aus Weiz.</span>
         </div>
         <div class="section-heading left reveal delay-1">
@@ -371,7 +372,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <a class="footer-logo" href="#top"><img class="footer-logo-img" src="assets/weiztech-logo.png" alt="WeizTech" width="190" height="42"></a>
+        <a class="footer-logo" href="#top"><img class="footer-logo-img" fetchpriority="high" src="assets/weiztech-logo-new.png" alt="WeizTech" width="190" height="42"></a>
         <p>Computerhilfe direkt vor Ort in Weiz und Umgebung.</p>
       </div>
       <div><h3>Kontakt</h3><a href="tel:+436507092527">+43 650 7092527</a><a href="tel:+4367761658695">+43 677 61658695</a><a href="mailto:weiztech@proton.me">weiztech@proton.me</a></div>
@@ -387,7 +388,17 @@
     (() => {
       const promo = document.getElementById('autumn-promo');
       if (!promo) return;
-      const close = () => promo.classList.add('is-done');
+      const key = 'weiztech_autumn_promo_seen';
+      try {
+        if (sessionStorage.getItem(key) === '1') {
+          promo.classList.add('is-done');
+          return;
+        }
+      } catch (_) {}
+      const close = () => {
+        promo.classList.add('is-done');
+        try { sessionStorage.setItem(key, '1'); } catch (_) {}
+      };
       promo.querySelector('.autumn-cta')?.addEventListener('click', close);
       promo.querySelector('.autumn-close')?.addEventListener('click', close);
     })();
