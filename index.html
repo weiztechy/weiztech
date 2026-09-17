@@ -1,422 +1,469 @@
 <!doctype html>
-<html lang="de">
+<html lang="de-AT">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0b0d">
-  <meta name="description" content="WeizTech – persönliche Computerhilfe direkt vor Ort in Weiz und Umgebung. PC, Laptop, WLAN, Drucker, Einrichtung und mehr.">
-  <meta name="robots" content="index,follow">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="WeizTech – IT-Hilfe vor Ort in Weiz">
-  <meta property="og:description" content="Professionelle Computerhilfe vor Ort. Klar, persönlich und transparent.">
-  <meta property="og:image" content="assets/weiztech-logo-new.png">
-  <title>WeizTech – IT-Hilfe vor Ort in Weiz</title>
-  <link rel="preload" as="image" href="assets/weiztech-logo-new.png" fetchpriority="high">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="WeizTech hilft bei PC-, Laptop-, WLAN- und Druckerproblemen direkt bei Ihnen vor Ort in Weiz und Umgebung. Klare Preise, verständliche Hilfe, persönlicher Kontakt.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>WeizTech – Computerhilfe & IT-Service vor Ort in Weiz</title>
+  <link rel="canonical" href="https://weiztech.store/">
   <link rel="icon" href="assets/favicon-new.png" type="image/png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=5.0">
-  <script src="config.js?v=2.1" defer></script>
-  <script src="script.js?v=2.1" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_AT">
+  <meta property="og:site_name" content="WeizTech">
+  <meta property="og:title" content="WeizTech – Computerhilfe vor Ort in Weiz">
+  <meta property="og:description" content="PC, WLAN oder Drucker? Persönliche IT-Hilfe direkt bei Ihnen in Weiz und Umgebung – verständlich und transparent.">
+  <meta property="og:url" content="https://weiztech.store/">
+  <meta property="og:image" content="https://weiztech.store/assets/weiztech-logo-new.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WeizTech – Computerhilfe vor Ort in Weiz">
+  <meta name="twitter:description" content="Persönliche Hilfe für PC, Laptop, WLAN und Drucker direkt bei Ihnen vor Ort.">
+  <meta name="twitter:image" content="https://weiztech.store/assets/weiztech-logo-new.png">
+  <link rel="stylesheet" href="styles.css?v=7.3">
+  <script src="config.js?v=7.3" defer></script>
+  <script src="script.js?v=7.3" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "WeizTech",
+    "url": "https://weiztech.store/",
+    "logo": "https://weiztech.store/assets/weiztech-logo-new.png",
+    "image": "https://weiztech.store/assets/weiztech-logo-new.png",
+    "telephone": "+436507092527",
+    "email": "weiztech@proton.me",
+    "priceRange": "€",
+    "areaServed": "Weiz und nähere Umgebung",
+    "description": "Persönliche Computerhilfe und IT-Service vor Ort in Weiz und Umgebung."
+  }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
-  <div class="autumn-promo" id="autumn-promo" aria-label="Herbst-Aktion">
-    <div class="autumn-leaves" aria-hidden="true">
-      <span class="leaf leaf-1">🍂</span><span class="leaf leaf-2">🍁</span><span class="leaf leaf-3">🍂</span>
-      <span class="leaf leaf-4">🍁</span><span class="leaf leaf-5">🍂</span><span class="leaf leaf-6">🍁</span>
-    </div>
-    <div class="autumn-promo-inner">
-      <span class="autumn-kicker">HERBST-AKTION</span>
-      <div class="autumn-price-animation" aria-live="polite">
-        <span class="autumn-old">45 €</span>
-        <span class="autumn-arrow">→</span>
-        <strong>35 €</strong>
-      </div>
-      <p>Erste 30 Minuten · inkl. Anfahrt in Weiz · inkl. USt.</p>
-      <div class="autumn-actions"><a class="autumn-cta" href="#kontakt">Termin anfragen <span aria-hidden="true">↗</span></a><button class="autumn-close" type="button" aria-label="Herbst-Aktion schließen">Schließen</button></div>
+
+  <div class="announcement" aria-label="Aktuelle Aktion">
+    <div class="container announcement-inner">
+      <p><span class="pulse-dot" aria-hidden="true"></span><strong>Herbst-Aktion:</strong> 35 € statt 45 € für die ersten 30 Minuten</p>
+      <a href="#preise">Preis ansehen <span aria-hidden="true">↗</span></a>
     </div>
   </div>
-
 
   <header class="site-header" id="top">
     <div class="container header-inner">
       <a class="brand" href="#top" aria-label="WeizTech Startseite">
-        <img class="brand-logo" fetchpriority="high" src="assets/weiztech-logo-new.png" alt="WeizTech" width="220" height="48">
+        <img src="assets/weiztech-logo-new.png" alt="WeizTech" width="1082" height="235">
       </a>
 
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Menü öffnen">
-        <span></span><span></span><span></span>
+      <button class="menu-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Menü öffnen">
+        <span></span><span></span>
       </button>
 
       <nav class="main-nav" id="main-nav" aria-label="Hauptnavigation">
         <a href="#leistungen">Leistungen</a>
         <a href="#preise">Preise</a>
         <a href="#ablauf">Ablauf</a>
+        <a href="#ueber-uns">Über uns</a>
         <a href="#faq">FAQ</a>
-        <a class="nav-phone" href="tel:+436507092527" aria-label="WeizTech anrufen">☎ <span>+43 650 7092527</span></a>
-        <a class="nav-cta" href="#kontakt">Termin anfragen <span aria-hidden="true">↗</span></a>
+        <a class="button button-small" href="#kontakt">Hilfe anfragen <span aria-hidden="true">→</span></a>
       </nav>
     </div>
+    <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
   </header>
 
   <main id="main">
-    <section class="hero section">
-      <div class="hero-grid container">
-        <div class="hero-copy reveal">
-          <div class="eyebrow">WEIZTECH / IT-SERVICE / WEIZ</div>
-          <h1>Technik, die<br><span>einfach funktioniert.</span></h1>
-          <p class="hero-lead">Persönliche IT-Hilfe vor Ort in Weiz. Direkt, verständlich und transparent.</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Computerhilfe in Weiz & Umgebung</p>
+          <h1 id="hero-title">Technikproblem?<br><span>Wir kommen vorbei.</span></h1>
+          <p class="hero-lead">Hilfe bei PC, Laptop, WLAN, Drucker und Einrichtung – direkt bei Ihnen vor Ort, verständlich erklärt und mit klaren Preisen.</p>
+
           <div class="hero-actions">
-            <a class="button button-primary" href="#kontakt">Termin anfragen <span aria-hidden="true">↗</span></a>
-            <a class="button button-quiet" href="#leistungen">Leistungen ansehen <span aria-hidden="true">↓</span></a>
+            <a class="button" href="#kontakt">Problem schildern <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="tel:+436507092527" aria-label="WeizTech anrufen unter 0650 709 25 27">Jetzt anrufen</a>
           </div>
 
-          <div class="hero-price" aria-label="Herbst-Aktion">
-            <span class="hero-price-label">Herbst-Aktion</span>
-            <strong>35 €</strong>
-            <span><s>45 €</s> · erste 30 Min.<br>inkl. Anfahrt in Weiz<br><b>Alle Preise inkl. USt.</b></span>
-            <a href="#preise">Aktion ansehen →</a>
+          <div class="hero-meta" aria-label="Wichtige Informationen">
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Anfahrt in Weiz inklusive</span>
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>35 € / erste 30 Min.</span>
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Gerät bleibt bei Ihnen</span>
           </div>
         </div>
 
-        <div class="hero-panel hero-panel-simple reveal delay-1" aria-label="WeizTech Vor-Ort-Service">
-          <div class="panel-topline">
-            <span>WEIZTECH / SERVICE</span>
-            <span>VOR ORT IN WEIZ</span>
+        <div class="hero-panel" aria-label="WeizTech Serviceübersicht">
+          <div class="panel-head">
+            <span>WEIZTECH / VOR-ORT-SERVICE</span>
+            <span class="live-label">WEIZ / UMGEBUNG</span>
           </div>
-          <div class="panel-main">
-            <div class="panel-main-copy">
-              <span class="mini-label">PERSÖNLICHE HILFE</span>
-              <h2>Direkt zu Ihnen nach Hause.</h2>
-              <p>Computer, WLAN, Drucker und Einrichtung – verständlich erklärt und direkt vor Ort erledigt.</p>
+          <div class="diagnostic-card">
+            <div class="diagnostic-top">
+              <span class="diagnostic-label">Schnelle Orientierung</span>
+              <span class="diagnostic-code">WZ-01</span>
+            </div>
+            <h2>Was funktioniert gerade nicht?</h2>
+            <div class="problem-grid">
+              <a href="#kontakt" data-topic="PC oder Laptop"><span>PC / Laptop</span><b>→</b></a>
+              <a href="#kontakt" data-topic="WLAN oder Internet"><span>WLAN / Internet</span><b>→</b></a>
+              <a href="#kontakt" data-topic="Drucker oder Zubehör"><span>Drucker</span><b>→</b></a>
+              <a href="#kontakt" data-topic="Einrichtung"><span>Einrichtung</span><b>→</b></a>
+            </div>
+            <div class="diagnostic-footer">
+              <span>Keine Ahnung, woran es liegt?</span>
+              <a href="#kontakt">Einfach beschreiben</a>
             </div>
           </div>
-          <div class="panel-highlights">
-            <div><span>35 €</span><small>erste 30 Min.</small></div>
-            <div><span>Vor Ort</span><small>Anfahrt in Weiz inkl.</small></div>
-            <div><span>Direkt</span><small>ohne Hotline</small></div>
+          <div class="panel-stats">
+            <div><span>01</span><strong>Persönlich</strong><small>Direkter Kontakt</small></div>
+            <div><span>02</span><strong>Verständlich</strong><small>Ohne Fachchinesisch</small></div>
+            <div><span>03</span><strong>Transparent</strong><small>Preis vorher klar</small></div>
           </div>
-          <a class="panel-link" href="#kontakt">Termin anfragen <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </section>
 
-    <section class="trust-bar" aria-label="WeizTech Vorteile">
+    <section class="trust-strip" aria-label="Vorteile von WeizTech">
       <div class="container trust-grid">
-        <div><span class="trust-index">01</span><strong>Persönlich</strong><p>Direkter Kontakt statt Hotline.</p></div>
-        <div><span class="trust-index">02</span><strong>Transparent</strong><p>Klare Preise vor Beginn.</p></div>
-        <div><span class="trust-index">03</span><strong>Vor Ort</strong><p>Weiz & Umgebung.</p></div>
-        <div><span class="trust-index">04</span><strong>Verständlich</strong><p>Ohne Fachchinesisch.</p></div>
+        <div><strong>Vor Ort</strong><span>Direkt bei Ihnen in Weiz</span></div>
+        <div><strong>Klare Grenzen</strong><span>Wir sagen, wenn ein Spezialbetrieb sinnvoller ist</span></div>
+        <div><strong>Keine Geräteabgabe</strong><span>Ihre Technik bleibt bei Ihnen</span></div>
+        <div><strong>Direkter Kontakt</strong><span>Keine Hotline, kein Ticketsystem</span></div>
       </div>
     </section>
 
-    <section class="section" id="leistungen">
+    <section class="section services-section" id="leistungen" aria-labelledby="services-title">
       <div class="container">
-        <div class="section-heading reveal">
+        <div class="section-heading">
           <div>
-            <span class="kicker">Leistungen</span>
-            <h2>Die wichtigsten Dinge.<br>Ohne Umwege.</h2>
+            <p class="eyebrow">01 / Leistungen</p>
+            <h2 id="services-title">Alltägliche Technik.<br><span>Ohne alltäglichen Ärger.</span></h2>
           </div>
-          <p>Konzentriert auf Technikprobleme, die wir sinnvoll direkt bei Ihnen lösen können.</p>
+          <p>Sie müssen die Ursache nicht kennen. Sagen Sie uns einfach, was nicht funktioniert – wir klären den Rest mit Ihnen.</p>
         </div>
 
         <div class="services-grid">
-          <a class="service-card service-card-featured reveal" href="#kontakt" aria-label="PC und Laptop Hilfe anfragen">
-            <div class="service-card-top"><span class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8m-4-4v4"></path></svg></span><span class="service-arrow">↗</span></div>
-            <span class="service-no">01</span>
+          <article class="service-card">
+            <span class="service-index">01</span>
+            <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
             <h3>PC & Laptop</h3>
-            <p>Langsam, instabil oder voller Fehlermeldungen? Wir prüfen das Gerät und zeigen den nächsten sinnvollen Schritt.</p>
-            <span class="service-link">Hilfe anfragen <span>→</span></span>
-          </a>
+            <p>Langsame Geräte, Fehlermeldungen, Abstürze, Updates und Softwareprobleme.</p>
+            <a href="#kontakt" data-topic="PC oder Laptop">Hilfe anfragen <span aria-hidden="true">→</span></a>
+          </article>
 
-          <a class="service-card reveal delay-1" href="#kontakt" aria-label="WLAN und Internet Hilfe anfragen">
-            <div class="service-card-top"><span class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.55a11 11 0 0 1 14.08 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"></path></svg></span><span class="service-arrow">↗</span></div>
-            <span class="service-no">02</span>
+          <article class="service-card">
+            <span class="service-index">02</span>
+            <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0M8.5 16a5.5 5.5 0 0 1 7 0"/><circle cx="12" cy="20" r=".7"/></svg></div>
             <h3>WLAN & Internet</h3>
-            <p>Router, Verbindung oder Geräte machen Probleme? Wir richten ein und testen.</p>
-            <span class="service-link">Hilfe anfragen <span>→</span></span>
-          </a>
+            <p>Router einrichten, Verbindungen prüfen und Geräte zuverlässig ins Netzwerk bringen.</p>
+            <a href="#kontakt" data-topic="WLAN oder Internet">Hilfe anfragen <span aria-hidden="true">→</span></a>
+          </article>
 
-          <a class="service-card reveal delay-2" href="#kontakt" aria-label="Drucker und Geräte Hilfe anfragen">
-            <div class="service-card-top"><span class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></span><span class="service-arrow">↗</span></div>
-            <span class="service-no">03</span>
-            <h3>Drucker & Geräte</h3>
-            <p>Drucker, Scanner, Monitore und Zubehör einrichten oder wieder verbinden.</p>
-            <span class="service-link">Hilfe anfragen <span>→</span></span>
-          </a>
+          <article class="service-card">
+            <span class="service-index">03</span>
+            <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H3V9h18v9h-3"/><path d="M6 14h12v7H6zM17 12h1"/></svg></div>
+            <h3>Drucker & Zubehör</h3>
+            <p>Drucker, Scanner, Monitore und anderes Zubehör einrichten oder wieder verbinden.</p>
+            <a href="#kontakt" data-topic="Drucker oder Zubehör">Hilfe anfragen <span aria-hidden="true">→</span></a>
+          </article>
 
-          <a class="service-card reveal" href="#kontakt" aria-label="Einrichtung anfragen">
-            <div class="service-card-top"><span class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20"></path><circle cx="12" cy="12" r="9"></circle></svg></span><span class="service-arrow">↗</span></div>
-            <span class="service-no">04</span>
-            <h3>Einrichtung</h3>
-            <p>Neue Geräte, Benutzerkonten, E-Mail, Programme und wichtige Einstellungen.</p>
-            <span class="service-link">Hilfe anfragen <span>→</span></span>
-          </a>
+          <article class="service-card">
+            <span class="service-index">04</span>
+            <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v6m0 6v6M3 12h6m6 0h6"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <h3>Neue Geräte</h3>
+            <p>Benutzerkonto, E-Mail, Programme und wichtige Einstellungen gemeinsam einrichten.</p>
+            <a href="#kontakt" data-topic="Einrichtung">Hilfe anfragen <span aria-hidden="true">→</span></a>
+          </article>
 
-          <a class="service-card reveal delay-1" href="#kontakt" aria-label="Datenübertragung anfragen">
-            <div class="service-card-top"><span class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 4v6m10-6v6M5 10h14v10H5z"></path><path d="M8 14h3m2 0h3m-8 3h3"></path></svg></span><span class="service-arrow">↗</span></div>
-            <span class="service-no">05</span>
-            <h3>Datenübertragung</h3>
-            <p>Fotos, Dokumente und persönliche Dateien sicher auf ein neues Gerät übertragen.</p>
-            <span class="service-link">Hilfe anfragen <span>→</span></span>
-          </a>
+          <article class="service-card">
+            <span class="service-index">05</span>
+            <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="10" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><path d="M14 5h5v3m-3-2 3 2M10 19H5v-3m3 2-3-2"/></svg></div>
+            <h3>Daten übertragen</h3>
+            <p>Fotos, Dokumente und persönliche Dateien beim Gerätewechsel sauber übernehmen.</p>
+            <a href="#kontakt" data-topic="Datenübertragung">Hilfe anfragen <span aria-hidden="true">→</span></a>
+          </article>
 
-          <a class="service-card reveal delay-2" href="#kontakt" aria-label="Kaufberatung anfragen">
-            <div class="service-card-top"><span class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.1 4.1a2 2 0 0 1 2.8 0l8 8a2 2 0 0 1 0 2.8l-5 5a2 2 0 0 1-2.8 0l-8-8a2 2 0 0 1 0-2.8z"></path><circle cx="9" cy="9" r="1"></circle></svg></span><span class="service-arrow">↗</span></div>
-            <span class="service-no">06</span>
+          <article class="service-card">
+            <span class="service-index">06</span>
+            <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 11a9 9 0 0 1-9 9H3l2-4a9 9 0 1 1 16-5Z"/><path d="m8 11 3 3 5-6"/></svg></div>
             <h3>Kaufberatung</h3>
-            <p>Passenden PC, Laptop oder Zubehör auswählen – unabhängig und verständlich.</p>
-            <span class="service-link">Hilfe anfragen <span>→</span></span>
-          </a>
+            <p>Gemeinsam klären, welches Gerät oder Zubehör wirklich zu Ihrem Bedarf passt.</p>
+            <a href="#kontakt" data-topic="Kaufberatung">Hilfe anfragen <span aria-hidden="true">→</span></a>
+          </article>
         </div>
 
-        <div class="scope-note reveal">
-          <div class="scope-icon">i</div>
-          <p><strong>Vor Ort heißt vor Ort.</strong> Geräte werden nicht mitgenommen. Wenn ein Problem einen Spezialbetrieb erfordert, sagen wir das offen.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section pricing-section" id="preise">
-      <div class="container pricing-shell">
-        <div class="section-heading reveal">
+        <div class="scope-banner">
           <div>
-            <span class="kicker">Preise</span>
-            <h2>Eine klare Zahl.<br>Von Anfang an.</h2>
+            <span class="scope-kicker">Nicht sicher, ob wir helfen können?</span>
+            <strong>Fragen kostet nichts.</strong>
           </div>
-          <p>Keine versteckten Kosten. Der Preis wird vor Beginn erklärt.</p>
-        </div>
-
-        <div class="pricing-card reveal delay-1">
-          <div class="pricing-main">
-            <span class="price-eyebrow">Herbst-Aktion / Vor-Ort-Termin</span>
-            <div class="promo-price"><span class="promo-old">€45</span><span class="price"><span>€</span>35</span></div>
-            <p>für die ersten 30 Minuten<br>inkl. Anfahrt innerhalb von Weiz<br><strong>Alle Preise inkl. USt.</strong></p>
-            <a class="button button-primary" href="#kontakt">Termin anfragen <span aria-hidden="true">↗</span></a>
-          </div>
-          <div class="pricing-detail">
-            <div><span>Weitere angefangene 30 Min.</span><strong>20 €</strong></div>
-            <div><span>Außerhalb von Weiz</span><strong>nach Entfernung</strong></div>
-            <div class="pricing-note"><span class="check-mark">✓</span><p>Herbst-Aktion: erste 30 Minuten 35 € statt 45 €. Weitere angefangene 30 Minuten kosten 20 €.</p></div>
-          </div>
-        </div>
-
-        <div class="pricing-trust reveal">
-          <span>✓</span><p>Kurze Ersteinschätzung</p>
-          <span>✓</span><p>Anfahrt in Weiz inklusive</p>
-          <span>✓</span><p>Zahlung nach erledigter Arbeit</p>
+          <p>Wenn eine Reparatur vor Ort nicht sinnvoll oder sicher möglich ist, sagen wir das offen und erklären den nächsten Schritt.</p>
+          <a href="#kontakt">Problem schildern <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
 
-    <section class="section compact-section" id="ablauf">
+    <section class="section pricing-section" id="preise" aria-labelledby="pricing-title">
+      <div class="container pricing-grid">
+        <div class="pricing-copy">
+          <p class="eyebrow">02 / Preise</p>
+          <h2 id="pricing-title">Vorher wissen,<br><span>womit Sie rechnen.</span></h2>
+          <p>Der Preis wird vor Beginn erklärt. Innerhalb von Weiz ist die Anfahrt bereits enthalten.</p>
+          <ul class="check-list">
+            <li><span>✓</span> Erste 30 Minuten: <strong>35 € statt 45 €</strong></li>
+            <li><span>✓</span> Jede weitere angefangene 30 Minuten: <strong>20 €</strong></li>
+            <li><span>✓</span> Außerhalb von Weiz: <strong>unverbindliche Anfahrts-Schätzung</strong> nach Entfernung</li>
+          </ul>
+          <p class="pricing-fineprint">Der Mindestpreis gilt auch, wenn das Problem schneller gelöst ist.</p>
+        </div>
+
+        <div class="price-calculator" aria-label="Preisrechner">
+          <div class="price-card-head">
+            <span>UNVERBINDLICHES RECHENBEISPIEL</span>
+            <span class="offer-badge">HERBST-AKTION</span>
+          </div>
+          <div class="price-display">
+            <span class="price-old">45 €</span>
+            <strong><span class="price-prefix" id="price-prefix" hidden>ca.</span><span id="price-total">35</span><span class="currency"> €</span></strong>
+            <p id="price-duration">für die ersten 30 Minuten</p>
+          </div>
+          <div class="calculator-controls">
+            <p class="control-label" id="duration-label">Arbeitszeit</p>
+            <div class="duration-options" role="group" aria-labelledby="duration-label">
+              <button type="button" data-duration="30" aria-pressed="true">30 Min.</button>
+              <button type="button" data-duration="60" aria-pressed="false">60 Min.</button>
+              <button type="button" data-duration="90" aria-pressed="false">90 Min.</button>
+              <button type="button" data-duration="120" aria-pressed="false">120 Min.</button>
+            </div>
+            <p class="control-label area-label" id="area-label">Einsatzort</p>
+            <div class="area-options" role="group" aria-labelledby="area-label">
+              <button type="button" class="area-option" data-area="weiz" aria-pressed="true">
+                <span>Weiz</span><small>Anfahrt inklusive</small>
+              </button>
+              <button type="button" class="area-option" data-area="outside" aria-pressed="false">
+                <span>Umgebung</span><small>Schätzung nach Entfernung</small>
+              </button>
+            </div>
+            <input type="hidden" id="service-area" value="weiz">
+            <div class="distance-control" id="distance-control" hidden>
+              <label for="travel-distance">Entfernung ab Weiz <span>(ca. einfache Strecke)</span></label>
+              <div class="distance-input-wrap">
+                <input id="travel-distance" type="number" min="1" max="100" step="1" inputmode="numeric" value="10" aria-describedby="distance-help">
+                <span>km</span>
+              </div>
+              <small id="distance-help">Die Anfahrt wird nur geschätzt. Der tatsächliche Preis wird vor dem Termin bestätigt.</small>
+            </div>
+          </div>
+          <div class="estimate-summary" aria-live="polite" aria-atomic="true">
+            <span id="estimate-description">30 Minuten Arbeitszeit</span><strong id="estimate-total">35 €</strong>
+            <span id="travel-description">Anfahrt in Weiz</span><strong id="travel-total">inklusive</strong>
+            <span id="grand-description" hidden>Geschätzter Gesamtpreis</span><strong id="grand-total" hidden>35 €</strong>
+          </div>
+          <p class="estimate-note" id="estimate-note">Unverbindliches Rechenbeispiel. Abgerechnet wird nach tatsächlicher Arbeitszeit in angefangenen 30 Minuten.</p>
+          <a class="button button-dark" href="#kontakt" id="estimate-cta">Termin anfragen <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process-section" id="ablauf" aria-labelledby="process-title">
       <div class="container">
-        <div class="section-heading reveal">
+        <div class="section-heading compact-heading">
           <div>
-            <span class="kicker">Ablauf</span>
-            <h2>Vier Schritte.<br>Mehr nicht.</h2>
+            <p class="eyebrow">03 / Ablauf</p>
+            <h2 id="process-title">Vom Problem<br><span>zur Lösung.</span></h2>
           </div>
-          <p>Einfach anfragen, Termin finden, Problem lösen.</p>
+          <p>Keine komplizierte Buchung. Wir klären zuerst kurz, worum es geht, und vereinbaren dann persönlich den Termin.</p>
         </div>
-
         <div class="steps-grid">
-          <article class="step reveal"><span>01</span><div><h3>Problem beschreiben</h3><p>Kurz sagen, was nicht funktioniert.</p></div></article>
-          <article class="step reveal delay-1"><span>02</span><div><h3>Termin vereinbaren</h3><p>Wir klären die Anfrage und finden einen Termin.</p></div></article>
-          <article class="step reveal delay-2"><span>03</span><div><h3>Hilfe vor Ort</h3><p>Wir prüfen, erklären und lösen.</p></div></article>
-          <article class="step reveal delay-3"><span>04</span><div><h3>Transparent abschließen</h3><p>Sie wissen, was gemacht wurde und warum.</p></div></article>
+          <article><span>01</span><h3>Problem beschreiben</h3><p>Per Formular, E-Mail oder Telefon kurz sagen, welches Gerät oder Problem betroffen ist.</p></article>
+          <article><span>02</span><h3>Termin vereinbaren</h3><p>Wir klären, ob der Fall zu unserem Vor-Ort-Service passt, und finden einen passenden Zeitpunkt.</p></article>
+          <article><span>03</span><h3>Vor Ort lösen</h3><p>Wir prüfen das Problem, erklären die Schritte und arbeiten direkt bei Ihnen.</p></article>
+          <article><span>04</span><h3>Klar abschließen</h3><p>Sie erfahren, was gemacht wurde, was es kostet und was Sie künftig beachten können.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section local-section">
-      <div class="container local-grid">
-        <div class="local-card reveal">
-          <div class="local-card-top">
-            <span class="kicker">Einsatzgebiet</span>
-            <span class="local-code">WZ / 01</span>
-          </div>
-          <div class="local-word">WEIZ<span>+</span></div>
-          <div class="local-meta">
-            <span>VOR ORT</span>
-            <span>DIREKT</span>
-            <span>PERSÖNLICH</span>
-          </div>
-        </div>
-        <div class="section-heading left reveal delay-1">
-          <span class="kicker">Lokal erreichbar</span>
-          <h2>Kein Callcenter.<br>Kein Versand.</h2>
-          <p>Wir kommen persönlich zu Ihnen. Innerhalb von Weiz ist die Anfahrt im Mindestpreis enthalten. Termine in umliegenden Gemeinden sind nach Vereinbarung möglich.</p>
-          <div class="location-tags"><span>Weiz</span><span>Nahe Umgebung</span><span>Weitere Orte auf Anfrage</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="manifesto-section">
-      <div class="container manifesto reveal">
-        <span class="kicker">Unser Anspruch</span>
-        <h2>Keine Hotline.<br>Kein Versand.<br><span>Kein Fachchinesisch.</span></h2>
-        <p>Einfach persönliche IT-Hilfe, wenn Technik nicht funktioniert.</p>
-      </div>
-    </section>
-
-    <section class="section about-section id="ueber-uns">
+    <section class="section about-section" id="ueber-uns" aria-labelledby="about-title">
       <div class="container about-grid">
-        <div class="about-brand reveal">
-          <span class="about-index">WEIZTECH / 02</span>
-          <img fetchpriority="high" src="assets/weiztech-logo-new.png" alt="WeizTech">
-          <span>Persönliche IT-Hilfe aus Weiz.</span>
+        <div class="local-card" aria-hidden="true">
+          <div class="local-card-top"><span>WEIZ / STEIERMARK</span><span>HOME BASE</span></div>
+          <div class="local-word">WEIZ<span>.</span></div>
+          <div class="local-lines"><i></i><i></i><i></i></div>
+          <div class="local-card-bottom"><strong>Hier daheim.<br>Für Sie da.</strong><span>Weiz &<br>nahe Umgebung</span></div>
         </div>
-        <div class="section-heading left reveal delay-1">
-          <span class="kicker">Über WeizTech</span>
-          <h2>Technik verständlich machen.</h2>
-          <p>Wir sind zwei technikbegeisterte Freunde aus Weiz und helfen bei alltäglichen Computerproblemen direkt vor Ort.</p>
-          <p>Persönliche IT-Hilfe, verständlich erklärt und zuverlässig umgesetzt.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section faq-section" id="faq">
-      <div class="container faq-layout">
-        <div class="section-heading left reveal">
-          <span class="kicker">FAQ</span>
-          <h2>Häufig gefragt.</h2>
-          <p>Die wichtigsten Antworten vor Ihrer Anfrage.</p>
-        </div>
-        <div class="accordion reveal delay-1">
-          <details>
-            <summary>Kommt ihr wirklich nur vor Ort?</summary>
-            <p>Ja. Wir holen keine Geräte ab und nehmen sie nicht mit. Alle Arbeiten werden direkt bei Ihnen durchgeführt.</p>
-          </details>
-          <details>
-            <summary>Was ist im Mindestpreis enthalten?</summary>
-            <p>Die Herbst-Aktion beträgt 35 € statt 45 € für die ersten 30 Minuten inklusive Anfahrt innerhalb von Weiz. Jede weitere angefangene halbe Stunde kostet 20 €. Alle Preise verstehen sich inkl. USt.</p>
-          </details>
-          <details>
-            <summary>Was passiert, wenn ihr das Problem nicht lösen könnt?</summary>
-            <p>Wir sagen offen, was möglich ist. Falls eine Werkstatt, ein Hersteller oder ein anderer Spezialbetrieb notwendig ist, erklären wir den sinnvollsten nächsten Schritt.</p>
-          </details>
-          <details>
-            <summary>Könnt ihr auch älteren Menschen helfen?</summary>
-            <p>Natürlich. Wir nehmen uns Zeit und erklären verständlich – auch bei grundlegenden Fragen zu Computer, E-Mail, Drucker und Internet.</p>
-          </details>
-          <details>
-            <summary>Wie kann ich bezahlen?</summary>
-            <p>Die verfügbaren Zahlungsarten werden bei der Terminvereinbarung bestätigt.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="section contact-section" id="kontakt">
-      <div class="container contact-grid">
-        <div class="contact-copy reveal">
-          <span class="kicker light">Kontakt</span>
-          <h2>Problem kurz beschreiben.</h2>
-          <p>Kurz beschreiben. Wir melden uns persönlich und klären den passenden Termin.</p>
-
-          <div class="contact-price-note">
-            <span>Startpreis</span>
-            <strong>35 €</strong>
-            <p><s>45 €</s> · Herbst-Aktion<br>inkl. Anfahrt in Weiz + 30 Min.<br>Alle Preise inkl. USt.</p>
+        <div class="about-copy">
+          <p class="eyebrow">04 / Über WeizTech</p>
+          <h2 id="about-title">Technikbegeistert.<br><span>Aber menschlich erklärt.</span></h2>
+          <p class="about-intro">Wir sind zwei technikbegeisterte Freunde aus Weiz und helfen bei alltäglichen Computerproblemen direkt vor Ort.</p>
+          <p>Unser Anspruch ist einfach: keine unnötigen Fachbegriffe, keine Arbeiten nur um der Arbeit willen und keine Geräte, die irgendwo verschwinden. Wir erklären auf Wunsch jeden Schritt – und sagen auch, wenn ein Fachbetrieb die bessere Wahl ist.</p>
+          <div class="about-points">
+            <span><b>Weiz</b> Anfahrt inklusive</span>
+            <span><b>Umgebung</b> nach Vereinbarung</span>
           </div>
+          <a class="text-link" href="#kontakt">Kontakt aufnehmen <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section boundaries-section" aria-labelledby="boundaries-title">
+      <div class="container boundaries-grid">
+        <div>
+          <p class="eyebrow">05 / Klarheit vor dem Termin</p>
+          <h2 id="boundaries-title">Was Sie von uns<br><span>erwarten können.</span></h2>
+        </div>
+        <div class="boundary-list">
+          <article><span>+</span><div><h3>Wir arbeiten vor Ort</h3><p>Ihr Gerät bleibt bei Ihnen. WeizTech bietet keinen Abhol- oder Werkstattservice an.</p></div></article>
+          <article><span>+</span><div><h3>Wir sprechen Grenzen offen an</h3><p>Hardware-Reparaturen oder Spezialfälle, die eine Werkstatt benötigen, werden nicht schön geredet.</p></div></article>
+          <article><span>+</span><div><h3>Sie behalten den Überblick</h3><p>Wir erklären, was wir tun, und wie die Abrechnung funktioniert, bevor unnötiger Aufwand entsteht.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-grid">
+        <div class="faq-intro">
+          <p class="eyebrow">06 / FAQ</p>
+          <h2 id="faq-title">Noch etwas<br><span>unklar?</span></h2>
+          <p>Die wichtigsten Fragen vor einer Anfrage. Für alles andere erreichen Sie uns direkt.</p>
+          <a class="text-link" href="tel:+436507092527">0650 709 25 27 <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="accordion">
+          <details>
+            <summary>Bei welchen Problemen könnt ihr helfen?</summary>
+            <p>Wir unterstützen bei alltäglichen Problemen mit PC, Laptop, WLAN, Drucker und Zubehör. Dazu kommen Geräteeinrichtung, Datenübertragung und Kaufberatung. Wenn eine Reparatur einen Spezialbetrieb erfordert, sprechen wir das offen an.</p>
+          </details>
+          <details>
+            <summary>Muss ich mein Gerät irgendwo hinbringen?</summary>
+            <p>Nein. Wir kommen zu Ihnen und arbeiten direkt vor Ort. Ihre Geräte werden weder abgeholt noch mitgenommen.</p>
+          </details>
+          <details>
+            <summary>Was kostet ein Termin?</summary>
+            <p>Während der Herbst-Aktion kosten die ersten 30 Minuten 35 € statt 45 €, inklusive Anfahrt innerhalb von Weiz. Jede weitere angefangene halbe Stunde kostet 20 €. Außerhalb von Weiz zeigt der Rechner eine unverbindliche Anfahrts-Schätzung nach Entfernung. Den tatsächlichen Preis bestätigen wir vorab.</p>
+          </details>
+          <details>
+            <summary>Helft ihr auch ohne technische Vorkenntnisse?</summary>
+            <p>Ja. Wir nehmen uns Zeit und erklären verständlich. Auch grundlegende Fragen zu Computer, E-Mail, Internet und Drucker sind bei uns richtig.</p>
+          </details>
+          <details>
+            <summary>Was, wenn sich das Problem nicht vor Ort lösen lässt?</summary>
+            <p>Wir erklären, was möglich ist und welcher nächste Schritt sinnvoll wäre – zum Beispiel eine Werkstatt, der Hersteller oder ein spezialisierter Fachbetrieb.</p>
+          </details>
+          <details>
+            <summary>Wie vereinbare ich einen Termin?</summary>
+            <p>Senden Sie eine Anfrage oder rufen Sie an. Wir melden uns bzw. klären das Anliegen persönlich und vereinbaren anschließend den Termin.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="kontakt" aria-labelledby="contact-title">
+      <div class="container contact-grid">
+        <div class="contact-copy">
+          <p class="eyebrow">07 / Kontakt</p>
+          <h2 id="contact-title">Kurz beschreiben.<br><span>Persönlich klären.</span></h2>
+          <p>Schreiben Sie uns, was nicht funktioniert. Wir klären mit Ihnen, ob wir helfen können und wie es weitergeht.</p>
 
           <div class="contact-options">
-            <a class="contact-option" id="phone-link-1" href="tel:+436507092527">
-              <span class="contact-option-icon">☎</span>
-              <span><small>Telefon</small><strong id="phone-display-1">+43 650 7092527</strong></span>
+            <a href="tel:+436507092527" id="phone-link-1">
+              <span class="contact-icon" aria-hidden="true">☎</span>
+              <span><small>Telefon</small><strong id="phone-display-1">0650 709 25 27</strong></span>
+              <b aria-hidden="true">→</b>
             </a>
-            <a class="contact-option" id="phone-link-2" href="tel:+4367761658695">
-              <span class="contact-option-icon">☎</span>
-              <span><small>Telefon 2</small><strong id="phone-display-2">+43 677 61658695</strong></span>
+            <a href="tel:+4367761658695" id="phone-link-2">
+              <span class="contact-icon" aria-hidden="true">☎</span>
+              <span><small>Telefon 2</small><strong id="phone-display-2">0677 616 58 695</strong></span>
+              <b aria-hidden="true">→</b>
             </a>
-            <a class="contact-option" id="email-link" href="mailto:weiztech@proton.me">
-              <span class="contact-option-icon">@</span>
+            <a href="mailto:weiztech@proton.me" id="email-link">
+              <span class="contact-icon" aria-hidden="true">@</span>
               <span><small>E-Mail</small><strong id="email-display">weiztech@proton.me</strong></span>
+              <b aria-hidden="true">→</b>
             </a>
-            <p class="setup-note" id="contact-setup-note" hidden></p>
           </div>
         </div>
 
-        <form class="contact-form reveal delay-1" id="contact-form" novalidate>
+        <form class="contact-form" id="contact-form">
+          <div class="form-heading">
+            <span>Anfrage senden</span>
+            <h3>Was können wir für Sie tun?</h3>
+            <p>Pflichtfelder sind mit * gekennzeichnet.</p>
+          </div>
+
           <div class="form-honeypot" aria-hidden="true">
             <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
           </div>
-          <div class="form-heading">
-            <span class="kicker">Anfrage</span>
-            <h3>Was können wir für Sie lösen?</h3>
-          </div>
+
           <div class="form-row">
-            <label>Ihr Name<input type="text" name="name" autocomplete="name" required></label>
-            <label>Telefonnummer<input type="tel" name="phone" autocomplete="tel" required></label>
+            <label for="name">Ihr Name *
+              <input id="name" name="name" autocomplete="name" maxlength="120" required placeholder="Vor- und Nachname">
+            </label>
+            <label for="phone">Telefonnummer *
+              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="50" required placeholder="Für unseren Rückruf">
+            </label>
           </div>
+
           <div class="form-row">
-            <label>E-Mail <span>(optional)</span><input type="email" name="email" autocomplete="email"></label>
-            <label>Ort<input type="text" name="location" autocomplete="address-level2" placeholder="z. B. Weiz" required></label>
+            <label for="email">E-Mail <span>(optional)</span>
+              <input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="name@beispiel.at">
+            </label>
+            <label for="location">Ort *
+              <input id="location" name="location" autocomplete="address-level2" maxlength="120" required placeholder="z. B. Weiz">
+            </label>
           </div>
-          <label>Gerät oder Thema
-            <select name="topic" required>
+
+          <label for="topic">Wobei brauchen Sie Hilfe? *
+            <select id="topic" name="topic" required>
               <option value="">Bitte auswählen</option>
-              <option>PC oder Laptop</option><option>WLAN oder Internet</option><option>Drucker oder Zubehör</option><option>Einrichtung</option><option>Datenübertragung</option><option>Kaufberatung</option><option>Anderes</option>
+              <option>PC oder Laptop</option>
+              <option>WLAN oder Internet</option>
+              <option>Drucker oder Zubehör</option>
+              <option>Einrichtung</option>
+              <option>Datenübertragung</option>
+              <option>Kaufberatung</option>
+              <option>Anderes</option>
             </select>
           </label>
-          <label>Problem<textarea name="message" rows="5" placeholder="Was funktioniert nicht? Kurz reicht. …" required></textarea></label>
-          <label class="checkbox-label"><input type="checkbox" name="consent" required><span>Ich stimme zu, dass meine Angaben zur Bearbeitung der Anfrage verwendet werden. Hinweise finden Sie in der <a href="datenschutz.html">Datenschutzerklärung</a>.</span></label>
-          <button class="button button-primary full" type="submit">Anfrage senden <span aria-hidden="true">↗</span></button>
-          <p class="form-hint">Ihre Angaben werden sicher an WeizTech übermittelt und zur Bearbeitung Ihrer Anfrage gespeichert.</p>
-          <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+
+          <label for="message">Ihr Anliegen *
+            <textarea id="message" name="message" rows="5" maxlength="3000" required placeholder="Was funktioniert nicht? Um welches Gerät geht es?"></textarea>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" name="consent" required>
+            <span>Ich stimme zu, dass meine Angaben zur Bearbeitung meiner Anfrage verwendet werden. Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.</span>
+          </label>
+
+          <button class="button full" type="submit">Anfrage senden <span aria-hidden="true">→</span></button>
+          <p class="form-hint" id="form-hint">Eine Anfrage ist noch keine Terminbestätigung. Den Termin vereinbaren wir persönlich mit Ihnen.</p>
+          <p class="form-status" id="form-status" role="status" aria-live="polite" tabindex="-1"></p>
+          <a class="text-link" id="email-fallback" hidden href="mailto:weiztech@proton.me">Anfrage stattdessen per E-Mail öffnen <span aria-hidden="true">→</span></a>
+          <noscript><p class="noscript-note">Das Formular benötigt JavaScript. Bitte rufen Sie uns an oder schreiben Sie an <a href="mailto:weiztech@proton.me">weiztech@proton.me</a>.</p></noscript>
         </form>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
+    <div class="container footer-top">
       <div class="footer-brand">
-        <a class="footer-logo" href="#top"><img class="footer-logo-img" fetchpriority="high" src="assets/weiztech-logo-new.png" alt="WeizTech" width="190" height="42"></a>
-        <p>Computerhilfe direkt vor Ort in Weiz und Umgebung.</p>
+        <a class="brand" href="#top"><img src="assets/weiztech-logo-new.png" alt="WeizTech" width="1082" height="235" loading="lazy"></a>
+        <p>Computerhilfe direkt bei Ihnen vor Ort in Weiz und Umgebung.</p>
       </div>
-      <div><h3>Kontakt</h3><a href="tel:+436507092527">+43 650 7092527</a><a href="tel:+4367761658695">+43 677 61658695</a><a href="mailto:weiztech@proton.me">weiztech@proton.me</a></div>
-      <div><h3>Navigation</h3><a href="#leistungen">Leistungen</a><a href="#preise">Preise</a><a href="#ablauf">Ablauf</a><a href="#faq">FAQ</a><a href="#kontakt">Kontakt</a></div>
-      <div><h3>Kontakt</h3><a href="tel:+436507092527">+43 650 7092527</a><a href="mailto:weiztech@proton.me">weiztech@proton.me</a></div>
+      <div><h3>Navigation</h3><a href="#leistungen">Leistungen</a><a href="#preise">Preise</a><a href="#ablauf">Ablauf</a><a href="#faq">FAQ</a></div>
+      <div><h3>Kontakt</h3><a href="tel:+436507092527">0650 709 25 27</a><a href="tel:+4367761658695">0677 616 58 695</a><a href="mailto:weiztech@proton.me">weiztech@proton.me</a></div>
       <div><h3>Rechtliches</h3><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div>
     </div>
-    <div class="container footer-bottom"><span>© <span id="year"></span> WeizTech · Alle Preise inkl. USt.</span><a href="#top">Nach oben ↑</a></div>
+    <div class="container footer-bottom">
+      <span>© <span id="year">2026</span> WeizTech</span>
+      <span>Vor-Ort-Service in Weiz & Umgebung</span>
+      <a href="#top">Nach oben ↑</a>
+    </div>
   </footer>
 
-  <div class="mobile-cta" aria-label="Schnellaktion"><a class="mobile-call" href="tel:+436507092527" aria-label="WeizTech anrufen">☎</a><a class="mobile-book" href="#kontakt" aria-label="Termin anfragen">Termin anfragen <span>↗</span></a></div>
-  <script>
-    (() => {
-      const promo = document.getElementById('autumn-promo');
-      if (!promo) return;
-      const key = 'weiztech_autumn_promo_seen';
-      try {
-        if (sessionStorage.getItem(key) === '1') {
-          promo.classList.add('is-done');
-          return;
-        }
-      } catch (_) {}
-      const close = () => {
-        promo.classList.add('is-done');
-        try { sessionStorage.setItem(key, '1'); } catch (_) {}
-      };
-      promo.querySelector('.autumn-cta')?.addEventListener('click', close);
-      promo.querySelector('.autumn-close')?.addEventListener('click', close);
-    })();
-  </script>
-  <script>
-    (() => {
-      const cta = document.querySelector('.mobile-cta');
-      if (!cta) return;
-      let ticking = false;
-      const update = () => {
-        cta.classList.toggle('is-compact', window.scrollY > 140);
-        ticking = false;
-      };
-      window.addEventListener('scroll', () => {
-        if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
-      }, { passive: true });
-      update();
-    })();
-  </script>
+  <div class="mobile-cta" aria-label="Schnellkontakt">
+    <a href="tel:+436507092527">Anrufen</a>
+    <a href="#kontakt">Hilfe anfragen <span aria-hidden="true">→</span></a>
+  </div>
 </body>
 </html>

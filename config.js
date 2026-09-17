@@ -16,5 +16,11 @@ window.WEIZTECH_CONFIG = {
   city: "",
   websiteUrl: "https://weiztech.store",
   serviceRadius: "Weiz und nähere Umgebung",
+  travelEstimate: {
+    perKm: 0.50,
+    minimum: 5,
+    roundTrip: true
+  },
   backendUrl: "https://kpjbaramdzvjyfkjrqte.supabase.co/functions/v1/submit-request"
 };
+
