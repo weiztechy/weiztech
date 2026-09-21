@@ -3,6 +3,19 @@
   const config = window.WEIZTECH_CONFIG || {};
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
+
+  // Site opening animation: short branded intro, then stagger the hero in.
+  const startSiteIntro = () => {
+    const root = document.documentElement;
+    if (!root.classList.contains('site-booting')) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      window.setTimeout(() => {
+        root.classList.add('site-ready');
+        window.setTimeout(() => root.classList.remove('site-booting'), 1450);
+      }, 720);
+    }));
+  };
+  startSiteIntro();
   const year = $('#year');
   if (year) year.textContent = new Date().getFullYear();
 
@@ -208,39 +221,51 @@
     heroVisual.addEventListener('mouseleave', resetHeroTilt);
   }
 
-  // Reveal animation for key content blocks. Some elements slide in from the side instead of fading upward.
+  // Scroll reveals with deliberate direction and enough travel time to feel continuous.
   const revealTargets = $$('.service-card, .price-calculator, .steps-grid article, .trust-grid > div, .local-graphic, .about-copy, .faq-grid details, .contact-copy, .contact-form, .contact-options > a, .local-stats > div');
-  revealTargets.forEach((element, index) => {
-    element.setAttribute('data-reveal', '');
-    element.style.transitionDelay = `${Math.min(index * 35, 220)}ms`;
-  });
 
-  const assignDirectionalReveal = (selector, alternating = true, forcedDirection = '') => {
+  const setRevealDirection = (selector, mode = 'alternate') => {
     $$(selector).forEach((element, index) => {
-      const direction = forcedDirection || (alternating ? (index % 2 === 0 ? 'left' : 'right') : 'left');
-      element.classList.add(direction === 'right' ? 'reveal-right' : 'reveal-left');
+      if (mode === 'left') element.classList.add('reveal-left');
+      else if (mode === 'right') element.classList.add('reveal-right');
+      else element.classList.add(index % 2 === 0 ? 'reveal-left' : 'reveal-right');
     });
   };
 
-  assignDirectionalReveal('.service-card');
-  assignDirectionalReveal('.steps-grid article');
-  assignDirectionalReveal('.trust-grid > div');
-  assignDirectionalReveal('.faq-grid details');
-  assignDirectionalReveal('.contact-options > a');
-  assignDirectionalReveal('.local-stats > div');
-  $('.about-copy')?.classList.add('reveal-right');
-  $('.local-graphic')?.classList.add('reveal-left');
+  setRevealDirection('.service-card');
+  setRevealDirection('.steps-grid article');
+  setRevealDirection('.trust-grid > div');
+  setRevealDirection('.faq-grid details');
+  setRevealDirection('.contact-options > a');
+  setRevealDirection('.local-stats > div');
+  setRevealDirection('.local-graphic', 'left');
+  setRevealDirection('.about-copy', 'right');
+
+  revealTargets.forEach(element => element.setAttribute('data-reveal', ''));
+
+  const completeReveal = element => {
+    element.classList.add('is-visible');
+    const cleanup = () => {
+      // Remove reveal-only state after the transition so normal hover transforms work again.
+      element.removeAttribute('data-reveal');
+      element.classList.remove('reveal-left', 'reveal-right', 'is-visible');
+    };
+    window.setTimeout(cleanup, 1250);
+  };
+
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
+      const visibleEntries = entries.filter(entry => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      visibleEntries.forEach((entry, index) => {
         revealObserver.unobserve(entry.target);
+        // Tiny local stagger only for elements entering together; avoids the old "pop" effect.
+        window.setTimeout(() => completeReveal(entry.target), index * 72);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
     revealTargets.forEach(element => revealObserver.observe(element));
   } else {
-    revealTargets.forEach(element => element.classList.add('is-visible'));
+    revealTargets.forEach((element, index) => window.setTimeout(() => completeReveal(element), index * 60));
   }
 
 
