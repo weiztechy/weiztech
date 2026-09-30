@@ -4,18 +4,6 @@
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
 
-  // Site opening animation: short branded intro, then stagger the hero in.
-  const startSiteIntro = () => {
-    const root = document.documentElement;
-    if (!root.classList.contains('site-booting')) return;
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      window.setTimeout(() => {
-        root.classList.add('site-ready');
-        window.setTimeout(() => root.classList.remove('site-booting'), 1450);
-      }, 720);
-    }));
-  };
-  startSiteIntro();
   const year = $('#year');
   if (year) year.textContent = new Date().getFullYear();
 
@@ -40,7 +28,7 @@
   nav?.addEventListener('focusout', event => {
     if (event.relatedTarget && !nav.contains(event.relatedTarget) && event.relatedTarget !== menuButton) setMenu(false);
   });
-  window.matchMedia('(max-width: 700px)').addEventListener('change', () => setMenu(false));
+  window.matchMedia('(max-width: 900px)').addEventListener('change', () => setMenu(false));
 
   // Preserve the existing public contact configuration and backend contract.
   const email = config.email || 'weiztech@proton.me';
@@ -194,238 +182,54 @@
     }
   });
 
-  // Interactive hero tilt and subtle parallax.
-  const heroVisual = $('.hero-visual');
-  const resetHeroTilt = () => {
-    if (!heroVisual) return;
-    heroVisual.style.setProperty('--tilt-x', '0deg');
-    heroVisual.style.setProperty('--tilt-y', '0deg');
-    heroVisual.style.setProperty('--move-x', '0px');
-    heroVisual.style.setProperty('--move-y', '0px');
-  };
-  if (heroVisual && window.matchMedia('(pointer:fine)').matches) {
-    resetHeroTilt();
-    let heroRaf = null;
-    heroVisual.addEventListener('mousemove', event => {
-      const rect = heroVisual.getBoundingClientRect();
-      const px = ((event.clientX - rect.left) / rect.width) - 0.5;
-      const py = ((event.clientY - rect.top) / rect.height) - 0.5;
-      if (heroRaf) window.cancelAnimationFrame(heroRaf);
-      heroRaf = window.requestAnimationFrame(() => {
-        heroVisual.style.setProperty('--tilt-x', `${(-py * 10).toFixed(2)}deg`);
-        heroVisual.style.setProperty('--tilt-y', `${(px * 12).toFixed(2)}deg`);
-        heroVisual.style.setProperty('--move-x', `${(px * 22).toFixed(2)}px`);
-        heroVisual.style.setProperty('--move-y', `${(py * 20).toFixed(2)}px`);
-      });
-    });
-    heroVisual.addEventListener('mouseleave', resetHeroTilt);
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const revealElements = $$('.section-heading, .service-card, .pricing-copy, .price-calculator, .steps-grid article, .local-graphic, .about-copy, .faq-grid > div, .contact-copy, .contact-form, .connection-grid > div');
+  if ('IntersectionObserver' in window && !reducedMotion.matches) {
+    revealElements.forEach((el, i) => { el.classList.add('reveal'); el.style.setProperty('--reveal-delay', `${el.classList.contains('service-card') ? (i % 3) * 70 : 0}ms`); });
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    }), {threshold: .08});
+    revealElements.forEach(el => observer.observe(el));
+    reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) revealElements.forEach(el => el.classList.add('visible')); });
   }
-
-  // Scroll reveals with deliberate direction and enough travel time to feel continuous.
-  const revealTargets = $$('.service-card, .price-calculator, .steps-grid article, .trust-grid > div, .local-graphic, .about-copy, .faq-grid details, .contact-copy, .contact-form, .contact-options > a, .local-stats > div');
-
-  const setRevealDirection = (selector, mode = 'alternate') => {
-    $$(selector).forEach((element, index) => {
-      if (mode === 'left') element.classList.add('reveal-left');
-      else if (mode === 'right') element.classList.add('reveal-right');
-      else element.classList.add(index % 2 === 0 ? 'reveal-left' : 'reveal-right');
-    });
-  };
-
-  setRevealDirection('.service-card');
-  setRevealDirection('.steps-grid article');
-  setRevealDirection('.trust-grid > div');
-  setRevealDirection('.faq-grid details');
-  setRevealDirection('.contact-options > a');
-  setRevealDirection('.local-stats > div');
-  setRevealDirection('.local-graphic', 'left');
-  setRevealDirection('.about-copy', 'right');
-
-  revealTargets.forEach(element => element.setAttribute('data-reveal', ''));
-
-  const completeReveal = element => {
-    element.classList.add('is-visible');
-    const cleanup = () => {
-      // Remove reveal-only state after the transition so normal hover transforms work again.
-      element.removeAttribute('data-reveal');
-      element.classList.remove('reveal-left', 'reveal-right', 'is-visible');
-    };
-    window.setTimeout(cleanup, 1250);
-  };
-
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver(entries => {
-      const visibleEntries = entries.filter(entry => entry.isIntersecting)
-        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-      visibleEntries.forEach((entry, index) => {
-        revealObserver.unobserve(entry.target);
-        // Tiny local stagger only for elements entering together; avoids the old "pop" effect.
-        window.setTimeout(() => completeReveal(entry.target), index * 72);
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
-    revealTargets.forEach(element => revealObserver.observe(element));
-  } else {
-    revealTargets.forEach((element, index) => window.setTimeout(() => completeReveal(element), index * 60));
+  // Native scrolling remains interruptible; anchor targets receive keyboard focus.
+  $$('a[href^="#"]').forEach(link => link.addEventListener('click', event => {
+    const href = link.getAttribute('href');
+    if (href === '#') return;
+    const target = document.getElementById(href.slice(1));
+    if (!target) return;
+    event.preventDefault();
+    setMenu(false);
+    if (href === '#top') window.scrollTo({top:0, behavior:reducedMotion.matches ? 'instant' : 'smooth'});
+    else target.scrollIntoView({behavior: reducedMotion.matches ? 'instant' : 'smooth', block:'start'});
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex','-1');
+    target.focus({preventScroll:true});
+    history.pushState(null, '', href);
+  }));
+  // Lightweight progress and depth; no scroll hijacking.
+  let scrollPending = false;
+  const progressBar = $('.reading-progress');
+  function updateDepth() {
+    scrollPending = false;
+    const progress = window.scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    if (progressBar) progressBar.style.transform = `scaleX(${progress})`;
+    $('.site-header')?.classList.toggle('scrolled', scrollY > 40);
+    if (!reducedMotion.matches) $('.connection-art')?.style.setProperty('--spin', `${scrollY * .018}deg`);
   }
-
-
-  // Premium click feedback: tactile press + localized ripple.
-  const clickTargets = '.button, .text-link, .hero-quicknav a, .duration-options button, .visual-bottom > a, .contact-options > a, .accordion summary, .mobile-cta > a, .main-nav a, .legal-nav-link, .legal-back';
-  $$(clickTargets).forEach(element => {
-    element.classList.add('clicky');
-    element.addEventListener('pointerdown', event => {
-      element.classList.remove('is-clicked');
-      void element.offsetWidth;
-      element.classList.add('is-clicked');
-      window.setTimeout(() => element.classList.remove('is-clicked'), 260);
-
-      const rect = element.getBoundingClientRect();
-      const ripple = document.createElement('span');
-      ripple.className = 'ui-ripple';
-      ripple.style.left = `${event.clientX - rect.left}px`;
-      ripple.style.top = `${event.clientY - rect.top}px`;
-      element.appendChild(ripple);
-      window.setTimeout(() => ripple.remove(), 620);
-    }, { passive: true });
-  });
-
-  // Smooth FAQ opening/closing instead of the browser's instant snap.
-  $$('.accordion details').forEach(details => {
-    const summary = details.querySelector('summary');
-    const content = details.querySelector('p');
-    if (!summary || !content) return;
-    content.classList.add('accordion-content');
-
-    summary.addEventListener('click', event => {
-      event.preventDefault();
-      if (details.dataset.animating === 'true') return;
-      details.dataset.animating = 'true';
-
-      if (!details.open) {
-        details.open = true;
-        content.style.height = '0px';
-        content.style.opacity = '0';
-        content.style.transform = 'translateY(-8px)';
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          content.style.height = `${content.scrollHeight}px`;
-          content.style.opacity = '1';
-          content.style.transform = 'translateY(0)';
-        }));
-        const finish = () => {
-          content.style.height = 'auto';
-          details.dataset.animating = 'false';
-          content.removeEventListener('transitionend', finish);
-        };
-        content.addEventListener('transitionend', finish);
-      } else {
-        content.style.height = `${content.scrollHeight}px`;
-        content.style.opacity = '1';
-        requestAnimationFrame(() => {
-          content.style.height = '0px';
-          content.style.opacity = '0';
-          content.style.transform = 'translateY(-8px)';
-        });
-        const finish = () => {
-          details.open = false;
-          content.style.height = '';
-          content.style.opacity = '';
-          content.style.transform = '';
-          details.dataset.animating = 'false';
-          content.removeEventListener('transitionend', finish);
-        };
-        content.addEventListener('transitionend', finish);
-      }
+  window.addEventListener('scroll', () => { if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateDepth); } }, {passive:true});
+  updateDepth();
+  // One FAQ at a time, using accessible native details controls.
+  $$('.accordion details').forEach(detail => detail.addEventListener('toggle', () => {
+    if (detail.open) $$('.accordion details').forEach(other => { if (other !== detail) other.open = false; });
+  }));
+  if (matchMedia('(pointer:fine)').matches) {
+    $$('.service-card').forEach(card => {
+      card.addEventListener('pointermove', event => {
+        if (reducedMotion.matches) return;
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--pointer-x', `${event.clientX - rect.left}px`);
+        card.style.setProperty('--pointer-y', `${event.clientY - rect.top}px`);
+      }, {passive:true});
     });
-  });
-
-  // Deliberately smooth in-page navigation with a soft ease rather than a snap.
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const easeInOutQuint = t => t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
-  const smoothScrollTo = (targetY, duration = 880) => {
-    if (prefersReducedMotion) {
-      window.scrollTo(0, targetY);
-      return;
-    }
-    const startY = window.scrollY;
-    const distance = targetY - startY;
-    const started = performance.now();
-    const tick = now => {
-      const progress = Math.min(1, (now - started) / duration);
-      window.scrollTo(0, startY + distance * easeInOutQuint(progress));
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  };
-
-  $$('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', event => {
-      const id = link.getAttribute('href');
-      if (!id || id === '#') return;
-      const target = document.querySelector(id);
-      if (!target) return;
-      event.preventDefault();
-      const headerOffset = window.innerWidth <= 700 ? 78 : 112;
-      const targetY = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerOffset);
-      smoothScrollTo(targetY);
-      if (history.pushState) history.pushState(null, '', id);
-    });
-  });
-
-  // Scroll navigator: section number + orange progress trail. Only visible while scrolling.
-  const sectionMap = [
-    { el: $('.hero'), number: '00' },
-    { el: $('#leistungen'), number: '01' },
-    { el: $('#preise'), number: '02' },
-    { el: $('#ablauf'), number: '03' },
-    { el: $('#ueber-uns'), number: '04' },
-    { el: $('#faq'), number: '05' },
-    { el: $('#kontakt'), number: '06' }
-  ].filter(item => item.el);
-
-  const scrollHud = document.createElement('div');
-  scrollHud.className = 'scroll-hud';
-  scrollHud.setAttribute('aria-hidden', 'true');
-  scrollHud.innerHTML = '<div class="scroll-hud-number">00</div><div class="scroll-hud-track"><span class="scroll-hud-progress"></span><i class="scroll-hud-dot"></i></div>';
-  document.body.appendChild(scrollHud);
-  const hudNumber = scrollHud.querySelector('.scroll-hud-number');
-  const hudProgress = scrollHud.querySelector('.scroll-hud-progress');
-  const hudDot = scrollHud.querySelector('.scroll-hud-dot');
-  let hudTimer = null;
-  let lastSection = '00';
-  let hasActuallyScrolled = false;
-
-  const updateScrollHud = () => {
-    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-    hudProgress.style.transform = `scaleY(${progress})`;
-    hudDot.style.top = `${progress * 100}%`;
-
-    const marker = window.scrollY + window.innerHeight * 0.44;
-    let active = sectionMap[0];
-    sectionMap.forEach(item => {
-      if (item.el.offsetTop <= marker) active = item;
-    });
-    if (active.number !== lastSection) {
-      lastSection = active.number;
-      hudNumber.textContent = active.number;
-      hudNumber.classList.remove('is-popping');
-      void hudNumber.offsetWidth;
-      hudNumber.classList.add('is-popping');
-      window.setTimeout(() => hudNumber.classList.remove('is-popping'), 500);
-    }
-  };
-
-  const showScrollHud = () => {
-    if (window.scrollY > 4) hasActuallyScrolled = true;
-    if (!hasActuallyScrolled) return;
-    scrollHud.classList.add('is-visible');
-    updateScrollHud();
-    window.clearTimeout(hudTimer);
-    hudTimer = window.setTimeout(() => scrollHud.classList.remove('is-visible'), 3000);
-  };
-
-  window.addEventListener('scroll', showScrollHud, { passive: true });
-  window.addEventListener('resize', updateScrollHud);
-  updateScrollHud();
-
+  }
 })();
