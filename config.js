@@ -16,7 +16,7 @@ window.WEIZTECH_CONFIG = {
   city: "",
   websiteUrl: "https://weiztech.store",
   serviceRadius: "Weiz und nähere Umgebung",
-  // Regular prices in euro (incl. USt.).
+  // Regular prices in euro. Final prices: Kleinunternehmer, no USt. charged.
   prices: { first30: 45, extra30: 20 },
   // Seasonal offer. It ends automatically at the "ends" moment (Austrian time).
   // Herbst-Aktion: valid up to and including 30 November 2026.
