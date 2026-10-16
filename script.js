@@ -3,9 +3,33 @@
   const config = window.WEIZTECH_CONFIG || {};
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
+  const root = document.documentElement;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
   const year = $('#year');
   if (year) year.textContent = new Date().getFullYear();
+
+  // Light is the default; an explicit choice is remembered per browser.
+  const themeButton = $('#theme-toggle');
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  function currentTheme() { return root.dataset.theme === 'dark' ? 'dark' : 'light'; }
+  function applyTheme(theme, persist) {
+    root.dataset.theme = theme;
+    if (themeMeta) themeMeta.content = theme === 'dark' ? '#0d0e10' : '#ffffff';
+    if (themeButton) {
+      themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
+      themeButton.setAttribute('aria-label', theme === 'dark' ? 'Helles Design aktivieren' : 'Dunkles Design aktivieren');
+    }
+    if (persist) { try { localStorage.setItem('weiztech-theme', theme); } catch {} }
+    document.dispatchEvent(new CustomEvent('weiztech:theme', { detail: { theme } }));
+  }
+  applyTheme(currentTheme(), false);
+  themeButton?.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    const swap = () => applyTheme(next, true);
+    if (document.startViewTransition && !reducedMotion.matches) document.startViewTransition(swap);
+    else swap();
+  });
 
   // Mobile navigation supports keyboard focus and Escape.
   const menuButton = $('.menu-toggle');
@@ -18,7 +42,6 @@
     if (restoreFocus) menuButton.focus();
   }
   menuButton?.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
-  $$('#main-nav a').forEach(link => link.addEventListener('click', () => setMenu(false)));
   document.addEventListener('click', event => {
     if (!nav?.contains(event.target) && !menuButton?.contains(event.target)) setMenu(false);
   });
@@ -28,7 +51,7 @@
   nav?.addEventListener('focusout', event => {
     if (event.relatedTarget && !nav.contains(event.relatedTarget) && event.relatedTarget !== menuButton) setMenu(false);
   });
-  window.matchMedia('(max-width: 900px)').addEventListener('change', () => setMenu(false));
+  matchMedia('(max-width: 960px)').addEventListener('change', () => setMenu(false));
 
   // Preserve the existing public contact configuration and backend contract.
   const email = config.email || 'weiztech@proton.me';
@@ -44,15 +67,16 @@
     if ($('#topic')) $('#topic').value = link.dataset.topic;
   }));
 
+  // Price estimate.
   let duration = 30;
   const area = $('#service-area');
   function updateEstimate() {
     const total = 35 + ((duration - 30) / 30) * 20;
     const outside = area?.value === 'outside';
     if (!$('#price-total')) return;
-    $('#price-total').textContent = total;
     $('#price-duration').textContent = duration === 30 ? 'für die ersten 30 Minuten' : `für ${duration} Minuten Arbeitszeit`;
     $('.price-old').hidden = duration !== 30;
+    document.dispatchEvent(new CustomEvent('weiztech:estimate', { detail: { total, duration } }));
     $('#estimate-description').textContent = `${duration} Minuten Arbeitszeit`;
     $('#estimate-total').textContent = `${total} €`;
     $('#travel-description').textContent = outside ? 'Zusätzliche Anfahrt' : 'Anfahrt in Weiz';
@@ -72,17 +96,6 @@
     if (area?.value === 'weiz' && location && !location.value.trim()) location.value = 'Weiz';
   });
 
-
-  // Subtle orange page glow that increases with scroll depth.
-  const updateScrollProgress = () => {
-    const scrollRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const progress = Math.min(1, Math.max(0, window.scrollY / scrollRange));
-    document.documentElement.style.setProperty('--scroll-progress', progress.toFixed(3));
-  };
-  updateScrollProgress();
-  window.addEventListener('scroll', updateScrollProgress, { passive: true });
-  window.addEventListener('resize', updateScrollProgress);
-
   // Keep mobile actions clear of the enquiry form.
   if ('IntersectionObserver' in window) {
     const cta = $('.mobile-cta');
@@ -92,6 +105,7 @@
     }, { threshold: 0 }).observe(contact);
   }
 
+  // Enquiry form.
   const form = $('#contact-form');
   const status = $('#form-status');
   const submitButton = form?.querySelector('button[type="submit"]');
@@ -119,11 +133,23 @@
     $('#form-hint').textContent = 'Direktes Senden ist derzeit nicht verfügbar. Sie können Ihre Anfrage hier vorbereiten und anschließend in Ihrem E-Mail-Programm öffnen.';
     if (submitButton) submitButton.textContent = 'E-Mail-Anfrage vorbereiten';
   }
+  // Mark fields invalid only after the visitor has interacted with them.
+  form?.querySelectorAll('input[required], select[required], textarea[required]').forEach(field => {
+    if (field.type === 'checkbox') return;
+    const check = () => field.setAttribute('aria-invalid', String(!field.checkValidity()));
+    field.addEventListener('blur', () => { if (field.value.trim() || field.dataset.touched) { field.dataset.touched = '1'; check(); } });
+    field.addEventListener('input', () => { if (field.dataset.touched) check(); });
+  });
   form?.addEventListener('submit', async event => {
     event.preventDefault();
     if (submitting) return;
     setStatus('');
-    if (!form.reportValidity()) return;
+    if (!form.checkValidity()) {
+      const invalid = [...form.elements].filter(el => el.willValidate && !el.checkValidity());
+      invalid.forEach(el => { if (el.type !== 'checkbox') { el.dataset.touched = '1'; el.setAttribute('aria-invalid', 'true'); } });
+      form.reportValidity();
+      return;
+    }
     const data = new FormData(form);
     const value = key => String(data.get(key) || '').trim();
     const payload = {
@@ -166,6 +192,7 @@
       const number = result.requestNumber ? ` Ihre Anfragenummer: #${String(result.requestNumber)}.` : '';
       setStatus(`Vielen Dank! Ihre Anfrage ist bei uns eingegangen.${number} Wir melden uns persönlich, um einen Termin zu vereinbaren.`, true);
       form.reset();
+      form.querySelectorAll('[aria-invalid]').forEach(el => { el.removeAttribute('aria-invalid'); delete el.dataset.touched; });
       formStartedAt = Date.now();
     } catch (error) {
       prepareEmail(payload);
@@ -182,16 +209,22 @@
     }
   });
 
-  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const revealElements = $$('.section-heading, .service-card, .pricing-copy, .price-calculator, .steps-grid article, .local-graphic, .about-copy, .faq-grid > div, .contact-copy, .contact-form, .connection-grid > div');
-  if ('IntersectionObserver' in window && !reducedMotion.matches) {
-    revealElements.forEach((el, i) => { el.classList.add('reveal'); el.style.setProperty('--reveal-delay', `${el.classList.contains('service-card') ? (i % 3) * 70 : 0}ms`); });
+  // Gentle reveal on scroll; content is visible without JavaScript.
+  const revealElements = $$('.section-head, .service-card, .callout, .step, .pricing-copy, .price-card, .map-card, .about-copy, .faq-intro, .accordion, .contact-copy, .contact-form, .overview-grid');
+  if ('IntersectionObserver' in window && !reducedMotion.matches && !root.classList.contains('motion-paused')) {
+    revealElements.forEach(el => {
+      if (el.getBoundingClientRect().top < innerHeight) return;
+      el.classList.add('reveal');
+      const siblings = [...el.parentElement.children].filter(child => child.classList.contains(el.classList[0]));
+      const index = siblings.indexOf(el);
+      if (siblings.length > 1) el.style.setProperty('--reveal-delay', `${(index % 3) * 80}ms`);
+    });
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-    }), {threshold: .08});
-    revealElements.forEach(el => observer.observe(el));
-    reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) revealElements.forEach(el => el.classList.add('visible')); });
+    }), { rootMargin: '0px 0px -8% 0px', threshold: 0 });
+    revealElements.forEach(el => { if (el.classList.contains('reveal')) observer.observe(el); });
   }
+
   // Native scrolling remains interruptible; anchor targets receive keyboard focus.
   $$('a[href^="#"]').forEach(link => link.addEventListener('click', event => {
     const href = link.getAttribute('href');
@@ -200,36 +233,31 @@
     if (!target) return;
     event.preventDefault();
     setMenu(false);
-    if (href === '#top') window.scrollTo({top:0, behavior:reducedMotion.matches ? 'instant' : 'smooth'});
-    else target.scrollIntoView({behavior: reducedMotion.matches ? 'instant' : 'smooth', block:'start'});
-    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex','-1');
-    target.focus({preventScroll:true});
+    const behavior = reducedMotion.matches ? 'auto' : 'smooth';
+    if (href === '#top') window.scrollTo({ top: 0, behavior });
+    else target.scrollIntoView({ behavior, block: 'start' });
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
     history.pushState(null, '', href);
   }));
-  // Lightweight progress and depth; no scroll hijacking.
+
+  // Header border and current-section highlighting.
+  const header = $('.site-header');
+  const navLinks = $$('#main-nav a:not(.button)');
+  const sections = navLinks.map(link => document.getElementById(link.getAttribute('href').slice(1))).filter(Boolean);
   let scrollPending = false;
-  const progressBar = $('.reading-progress');
-  function updateDepth() {
+  function onScroll() {
     scrollPending = false;
-    const progress = window.scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight);
-    if (progressBar) progressBar.style.transform = `scaleX(${progress})`;
-    $('.site-header')?.classList.toggle('scrolled', scrollY > 40);
-    if (!reducedMotion.matches) $('.connection-art')?.style.setProperty('--spin', `${scrollY * .018}deg`);
-  }
-  window.addEventListener('scroll', () => { if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateDepth); } }, {passive:true});
-  updateDepth();
-  // One FAQ at a time, using accessible native details controls.
-  $$('.accordion details').forEach(detail => detail.addEventListener('toggle', () => {
-    if (detail.open) $$('.accordion details').forEach(other => { if (other !== detail) other.open = false; });
-  }));
-  if (matchMedia('(pointer:fine)').matches) {
-    $$('.service-card').forEach(card => {
-      card.addEventListener('pointermove', event => {
-        if (reducedMotion.matches) return;
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--pointer-x', `${event.clientX - rect.left}px`);
-        card.style.setProperty('--pointer-y', `${event.clientY - rect.top}px`);
-      }, {passive:true});
+    header?.classList.toggle('scrolled', scrollY > 8);
+    const line = innerHeight * 0.35;
+    let current = null;
+    sections.forEach(section => { if (section.getBoundingClientRect().top <= line) current = section.id; });
+    navLinks.forEach(link => {
+      const active = link.getAttribute('href') === `#${current}`;
+      link.classList.toggle('is-current', active);
+      if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
     });
   }
+  addEventListener('scroll', () => { if (!scrollPending) { scrollPending = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
 })();
