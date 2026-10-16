@@ -140,8 +140,26 @@
     { label: 'Verdächtige Nachricht oder Virus?', icon: 'i-shield', topic: 'Anderes', min: 30, max: 60, urgent: true,
       text: 'Geben Sie keine Passwörter oder Codes ein und rufen Sie keine Nummern aus der Nachricht zurück. Wir prüfen Ihr Gerät und zeigen, woran man Betrugsversuche erkennt.' },
     { label: 'Welches Gerät soll ich kaufen?', icon: 'i-cart', topic: 'Kaufberatung', min: 30, max: 60,
-      text: 'Wir klären, wofür Sie das Gerät brauchen, und empfehlen passende Modelle – unabhängig und ohne Verkaufsdruck.' }
+      text: 'Wir klären, wofür Sie das Gerät brauchen, und empfehlen passende Modelle – unabhängig und ohne Verkaufsdruck.' },
+    // Business problems ("Im Betrieb"). min/max null = individual offer.
+    { group: 'business', label: 'Neuer Arbeitsplatz für Mitarbeiter', icon: 'i-laptop', topic: 'Einrichtung', min: 60, max: 120,
+      text: 'Wir bereiten den Computer vor, legen Konten an, richten E-Mail, Drucker und Programme ein – damit der erste Arbeitstag nicht mit Technikproblemen beginnt.' },
+    { group: 'business', label: 'Büro-WLAN oder Netzwerk instabil', icon: 'i-network', topic: 'WLAN oder Internet', min: 60, max: 120,
+      text: 'Wir messen, wo das Signal schwach ist, prüfen Router und Verkabelung und trennen auf Wunsch das Gäste-WLAN vom Firmennetz.' },
+    { group: 'business', label: 'Kein oder unsicheres Backup', icon: 'i-database', topic: 'Anderes', min: 60, max: 120,
+      text: 'Wir richten automatische Sicherungen ein, testen die Wiederherstellung und zeigen Ihnen, wie Sie prüfen, ob das Backup läuft.' },
+    { group: 'business', label: 'Firmen-E-Mail oder eigene Domain', icon: 'i-mail', topic: 'Einrichtung', min: 60, max: 90,
+      text: 'E-Mail-Adressen mit Ihrer Domain, gemeinsame Kalender und Kontakte – eingerichtet auf allen Geräten im Team.' },
+    { group: 'business', label: 'Drucker oder Scanner im Büro', icon: 'i-printer', topic: 'Drucker oder Zubehör', min: 30, max: 60,
+      text: 'Wir binden den Drucker ins Netzwerk ein, damit alle drucken können, und richten Scannen direkt in Ordner oder E-Mail ein.' },
+    { group: 'business', label: 'Phishing-Mail geöffnet?', icon: 'i-shield', topic: 'Anderes', min: 30, max: 60, urgent: true,
+      text: 'Ändern Sie nichts überstürzt und geben Sie keine weiteren Daten ein. Wir prüfen betroffene Geräte und Konten, sichern Zugänge ab und schulen Ihr Team auf Wunsch.' },
+    { group: 'business', label: 'Neue Hardware für den Betrieb', icon: 'i-cart', topic: 'Kaufberatung', min: 30, max: 60,
+      text: 'Wir klären, was Ihr Betrieb wirklich braucht, vergleichen Angebote und richten die neuen Geräte anschließend ein.' },
+    { group: 'business', label: 'Laufende IT-Betreuung', icon: 'i-calendar', topic: 'Anderes', min: null, max: null,
+      text: 'Regelmäßige Checks von Backups und Updates, bevorzugte Termine und feste Ansprechpartner. Umfang und Preis vereinbaren wir individuell.' }
   ];
+  let finderMode = 'home';
   const finderOptions = $('#finder-options');
   const finderResult = $('#finder-result');
   const icon = id => `<svg class="icon" aria-hidden="true"><use href="#${id}"/></svg>`;
@@ -155,7 +173,8 @@
   }
   function showProblem(index) {
     const p = problems[index];
-    $$('#finder-options button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
+    $$('#finder-options button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.problem) === index)));
+    const individual = p.min == null;
     const phone = config.phones?.[0] || { display: '0650 709 25 27', link: '+436507092527' };
     finderResult.innerHTML = `
       <div class="finder-card">
@@ -164,36 +183,70 @@
         <p>${escapeHtml(p.text)}</p>
         ${p.urgent ? `<a class="finder-urgent" href="tel:${escapeHtml(phone.link)}">${icon('i-phone')}<span><strong>Dringend?</strong> Rufen Sie uns direkt an: ${escapeHtml(phone.display)}</span></a>` : ''}
         <dl class="finder-facts">
-          <div><dt>${icon('i-clock')} Richtwert</dt><dd>${minutesText(p.min, p.max)}</dd></div>
-          <div><dt>${icon('i-tag')} Kosten</dt><dd>${euroText(priceFor(p.min), priceFor(p.max))}</dd></div>
+          <div><dt>${icon('i-clock')} Richtwert</dt><dd>${individual ? 'Nach Bedarf' : minutesText(p.min, p.max)}</dd></div>
+          <div><dt>${icon('i-tag')} Kosten</dt><dd>${individual ? 'Individuelles Angebot' : euroText(priceFor(p.min), priceFor(p.max))}</dd></div>
         </dl>
-        <p class="fine-print">Unverbindliche Einschätzung. Abgerechnet wird die tatsächliche Arbeitszeit${area?.value === 'outside' ? ' zuzüglich Anfahrt' : ', Anfahrt in Weiz inklusive'}.</p>
+        <p class="fine-print">${individual ? 'Wir besprechen gemeinsam, was Ihr Betrieb braucht, und machen Ihnen ein unverbindliches Angebot.' : `Unverbindliche Einschätzung. Abgerechnet wird die tatsächliche Arbeitszeit${area?.value === 'outside' ? ' zuzüglich Anfahrt' : ', Anfahrt in Weiz inklusive'}.`}</p>
         <div class="finder-actions">
           <button type="button" class="button button-primary" data-finder-request>Damit anfragen ${icon('i-arrow')}</button>
-          <button type="button" class="button button-secondary" data-finder-calc>Im Rechner ansehen</button>
+          ${individual ? '<a class="button button-secondary" href="unternehmen.html#betreuung">Mehr zur Betreuung</a>' : '<button type="button" class="button button-secondary" data-finder-calc>Im Rechner ansehen</button>'}
         </div>
       </div>`;
     finderResult.querySelector('[data-finder-request]').addEventListener('click', () => {
       const topic = $('#topic'), message = $('#message');
       if (topic) topic.value = p.topic;
+      if (p.group === 'business') setRequestType('unternehmen');
       if (message && (!message.value.trim() || message.dataset.prefilled === message.value)) {
         message.value = `Problem: ${p.label}\n`;
         message.dataset.prefilled = message.value;
       }
       goTo('kontakt', message);
     });
-    finderResult.querySelector('[data-finder-calc]').addEventListener('click', () => {
+    finderResult.querySelector('[data-finder-calc]')?.addEventListener('click', () => {
       window.WEIZTECH_SET_DURATION?.(p.min);
       goTo('preise', document.querySelector(`[data-duration="${p.min}"]`));
     });
   }
+  const finderEmpty = finderResult?.innerHTML;
+  function renderFinder() {
+    finderOptions.innerHTML = problems
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => (p.group || 'home') === finderMode)
+      .map(({ p, i }) => `<button type="button" aria-pressed="false" data-problem="${i}">${icon(p.icon)}<span>${escapeHtml(p.label)}</span></button>`).join('');
+    finderResult.innerHTML = finderEmpty;
+    $$('[data-finder-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.finderMode === finderMode)));
+    $('.finder-mode')?.style.setProperty('--mode-index', finderMode === 'business' ? '1' : '0');
+  }
   if (finderOptions && finderResult) {
-    finderOptions.innerHTML = problems.map((p, i) => `<button type="button" aria-pressed="false" data-problem="${i}">${icon(p.icon)}<span>${escapeHtml(p.label)}</span></button>`).join('');
+    renderFinder();
     finderOptions.addEventListener('click', event => {
       const button = event.target.closest('[data-problem]');
       if (button) showProblem(Number(button.dataset.problem));
     });
+    $$('[data-finder-mode]').forEach(b => b.addEventListener('click', () => {
+      if (finderMode === b.dataset.finderMode) return;
+      finderMode = b.dataset.finderMode; renderFinder();
+    }));
   }
+
+  // Who the enquiry is for. It travels inside the message, like the callback time.
+  function setRequestType(type) {
+    const radio = document.querySelector(`input[name="requestType"][value="${type}"]`);
+    if (!radio) return;
+    radio.checked = true;
+    updateRequestType();
+  }
+  function updateRequestType() {
+    const type = document.querySelector('input[name="requestType"]:checked')?.value || 'privat';
+    const orgField = $('#org-field');
+    if (orgField) orgField.hidden = type === 'privat';
+    const orgLabel = $('#org-label');
+    if (orgLabel) orgLabel.textContent = type === 'verein' ? 'Name des Vereins' : 'Name des Betriebs';
+  }
+  $$('input[name="requestType"]').forEach(radio => radio.addEventListener('change', updateRequestType));
+  const requested = new URLSearchParams(location.search).get('anfrage');
+  if (requested === 'unternehmen' || requested === 'verein') setRequestType(requested);
+  else updateRequestType();
 
   // Keep mobile actions clear of the enquiry form.
   if ('IntersectionObserver' in window) {
@@ -258,6 +311,11 @@
     };
     if (payload.website) return;
     // Preferred callback time travels inside the message so the backend payload stays unchanged.
+    const requestType = value('requestType');
+    if (requestType && requestType !== 'privat' && payload.message) {
+      const org = value('organisation');
+      payload.message = `Anfrage für: ${requestType === 'verein' ? 'Verein' : 'Unternehmen'}${org ? ` – ${org}` : ''}\n\n${payload.message}`.slice(0, 3000);
+    }
     const callback = value('callback');
     if (callback && payload.message) payload.message = `${payload.message}\n\nAm besten erreichbar: ${callback}`.slice(0, 3000);
     for (const field of ['name', 'phone', 'location', 'topic', 'message']) {
@@ -295,6 +353,7 @@
       setStatus(`Vielen Dank! Ihre Anfrage ist bei uns eingegangen.${number} Wir melden uns persönlich, um einen Termin zu vereinbaren.`, true);
       form.reset();
       form.querySelectorAll('[aria-invalid]').forEach(el => { el.removeAttribute('aria-invalid'); delete el.dataset.touched; });
+      updateRequestType();
       formStartedAt = Date.now();
     } catch (error) {
       prepareEmail(payload);
@@ -345,7 +404,7 @@
 
   // Header border and current-section highlighting.
   const header = $('.site-header');
-  const navLinks = $$('#main-nav a:not(.button)');
+  const navLinks = $$('#main-nav a:not(.button)').filter(link => link.getAttribute('href').startsWith('#'));
   const sections = navLinks.map(link => document.getElementById(link.getAttribute('href').slice(1))).filter(Boolean);
   let scrollPending = false;
   function onScroll() {

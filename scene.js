@@ -35,7 +35,7 @@ if (!renderer) {
   const surfaces = [];
   const M = createMaterials();
   M.setTheme(isDark());
-  const prototypes = createDevices(renderer, M, () => { dirty = true; start(); });
+  const prototypes = document.getElementById('scene-stage') ? createDevices(renderer, M, () => { dirty = true; start(); }) : null;
   const illustrations = createIllustrationLibrary(renderer, M);
 
   // Neutral photo-studio environment: a large top softbox, two strip lights and a dim floor.
@@ -121,6 +121,8 @@ if (!renderer) {
 
   /* ---------------- Hero ---------------- */
   const heroElement = document.getElementById('scene-stage');
+  let devices = {};
+  if (heroElement) {
   const hero = surface(heroElement, { view: 5.9, minWidth: 7.4, target: new THREE.Vector3(0, 1.35, 0), dir: new THREE.Vector3(1.05, .78, 2.1), fov: 24, shadowSize: 2048, extent: 5 });
   const PLINTH = .22;
   const stage = new THREE.Group(); hero.scene.add(stage);
@@ -130,7 +132,7 @@ if (!renderer) {
   const sweep = new THREE.Mesh(new THREE.TorusGeometry(3.12, .045, 10, 120, PI * .55), M.signal.clone()); sweep.rotation.x = -PI / 2; sweep.position.y = PLINTH + .01; sweep.material.opacity = 0; stage.add(sweep);
   hero.scene.add(contactShadow(8.4, 8.4, .35));
   const rig = new THREE.Group(); rig.position.y = PLINTH; hero.scene.add(rig);
-  const devices = { laptop: prototypes.laptop, router: prototypes.router, printer: prototypes.printer };
+  devices = { laptop: prototypes.laptop, router: prototypes.router, printer: prototypes.printer };
   const baseScale = { laptop: 1, router: 1.02, printer: .98 };
   Object.entries(devices).forEach(([key, object]) => { object.userData.baseScale = baseScale[key]; object.scale.setScalar(baseScale[key]); object.visible = key === 'laptop'; rig.add(object); });
   const orbit = new THREE.Group(); hero.scene.add(orbit);
@@ -219,6 +221,18 @@ if (!renderer) {
     if (active === 'printer' && elapsed >= 0) { const feed = out((elapsed - .2) / 1.8); sheet.position.z = THREE.MathUtils.lerp(sheet.userData.zIn, sheet.userData.zOut, feed); sheet.position.y = sheet.userData.y0 - feed * .14; }
     else { sheet.position.z = sheet.userData.zIn; sheet.position.y = sheet.userData.y0; }
   };
+
+  }
+
+  /* ---------------- Office (business page) ---------------- */
+  const officeElement = document.querySelector('[data-render="office"]');
+  if (officeElement) {
+    const art = illustrations.create('office');
+    const s = surface(officeElement, { view: art.view, minWidth: 6.3, target: art.target, dir: new THREE.Vector3(1.15, .95, 2.05), fov: 24, shadowSize: 2048, extent: 5.5 });
+    s.scene.add(art.group); s.scene.add(contactShadow(9.5, 7.5, .3));
+    art.group.rotation.y = -.18;
+    s.update = (t, dt) => { art.group.rotation.y = motion.paused ? -.18 : damp(art.group.rotation.y, -.18 + s.pointer.x * .22, 4, dt); art.update(t, 0, dt); };
+  }
 
   /* ---------------- Service illustrations ---------------- */
   for (const element of document.querySelectorAll('.service-art')) {

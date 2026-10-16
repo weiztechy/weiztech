@@ -29,13 +29,17 @@ The contact form keeps the original backend URL, payload, timeout and e-mail fal
 - **"Was ist los?" helper** (below the services): visitors pick a symptom and see what we do, a rough time and cost range, and buttons to pre-fill the form or open the calculator. The entries and their minute ranges are the `problems` list in script.js.
 - **Larger text:** the "A+" button in the header enlarges all text by 15 % on every page and is remembered per browser.
 - **Callback time:** the form asks for the preferred time of day. It is added to the end of the message, so the backend payload is unchanged.
+- **Unternehmen & Vereine:** unternehmen.html is a separate page for businesses, self-employed people and clubs (services, how you work with businesses, ongoing support, clubs, prices, FAQ). The homepage links to it from the new "Für wen wir da sind" cards, the navigation ("Für Firmen"), the footer and the FAQ. Its header and footer are copies of the homepage's, so menu or footer changes need to be made in both files. Its 3D office scene is `office()` in illustrations.js.
+- **Who the enquiry is for:** the form asks "Zuhause / Unternehmen / Verein" (plus an optional business or club name). Links from the business page pre-select "Unternehmen" (`index.html?anfrage=unternehmen#kontakt`). Like the callback time, this is added to the start of the message, so the backend payload is unchanged.
+- **Helper in business mode:** "Was ist los?" has a "Zuhause | Im Betrieb" switch. Business entries have `group: 'business'` in the `problems` list; `min: null` shows "Individuelles Angebot" instead of a price.
 - **Social preview image:** assets/og-image.png (1200×630) is used when the site is shared on WhatsApp, Facebook and similar. To re-render it after design changes, start the preview server and run:
   `"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --enable-unsafe-swiftshader --use-angle=swiftshader --hide-scrollbars --window-size=1200,630 --virtual-time-budget=15000 --screenshot="%CD%\assets\og-image.png" http://127.0.0.1:5176/tools/og-image.html`
   tools/og-image.html is only needed for this and does not have to be uploaded.
 
 ## Files
 
-- index.html: content and structure (German).
+- index.html: homepage content and structure (German).
+- unternehmen.html: page for businesses and clubs.
 - styles.css: design tokens, both themes, layout and responsive rules.
 - script.js: theme toggle, navigation, price calculator, enquiry form.
 - motion.js: animation pause, price digit roll, FAQ animation, process line.

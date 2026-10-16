@@ -286,8 +286,72 @@ export function createIllustrationLibrary(renderer, M) {
     };
   }
 
+  /* ---------- Business page: small office ---------- */
+  function office() {
+    const group = new THREE.Group();
+    const F = .12; // floor top
+    const floor = slab(6.6, 4.6, F, .32, M.plinth); floor.position.y = F / 2; group.add(floor);
+    const wall = box(6.6, 2.3, .12, M.whiteMatte, 0, F + 1.15, -2.24); group.add(wall);
+    const windowPane = box(1.9, 1.0, .02, M.tint, -1.6, F + 1.45, -2.17); group.add(windowPane);
+    group.add(box(1.98, .05, .06, M.aluminium, -1.6, F + .93, -2.16));
+    const sign = markMesh(M.spaceGray, M.orange, .75, .03); sign.position.set(2.45, F + 1.85, -2.16); group.add(sign);
+    // Wall shelf with router
+    group.add(box(1.1, .05, .34, M.white, .35, F + 1.55, -2.0));
+    const router = new THREE.Group(); router.position.set(.35, F + 1.6, -2.0); group.add(router);
+    router.add(at(slab(.7, .3, .09, .06, M.graphite), 0, .045, 0));
+    for (let i = 0; i < 4; i++) { const led = box(.05, .015, .01, i ? M.greenGlow : M.orangeGlow, -.15 + i * .1, .05, .152); led.castShadow = false; router.add(led); }
+    for (const x of [-.26, .26]) { const ant = rounded(.07, .5, .03, .03, M.graphite); ant.position.set(x, .3, -.12); ant.rotation.z = x > 0 ? -.12 : .12; router.add(ant); }
+
+    function desk(x, z, rotation) {
+      const d = new THREE.Group(); d.position.set(x, F, z); d.rotation.y = rotation; group.add(d);
+      d.add(at(slab(2.0, 1.0, .07, .04, M.white), 0, .95, 0));
+      for (const lx of [-.92, .92]) for (const lz of [-.42, .42]) d.add(box(.05, .92, .05, M.aluminium, lx, .46, lz));
+      const screen = monitor(dashboard.texture, 2.6, 1.55); screen.scale.setScalar(.5); screen.position.set(0, .985, -.2); d.add(screen);
+      d.add(at(slab(.9, .28, .03, .03, M.aluminium), -.05, 1.0, .22));
+      const mouse = new THREE.Mesh(new THREE.CapsuleGeometry(.06, .07, 6, 12), M.aluminium); mouse.scale.set(1, .45, 1); mouse.rotation.x = PI / 2; mouse.position.set(.55, 1.0, .24); mouse.castShadow = true; d.add(mouse);
+      const chair = new THREE.Group(); chair.position.set(0, 0, .85); chair.rotation.y = PI + .25; d.add(chair);
+      chair.add(at(slab(.62, .6, .09, .1, M.graphite), 0, .58, 0));
+      const back = rounded(.6, .72, .08, .12, M.graphite); back.position.set(0, 1.0, .3); back.rotation.x = -.08; chair.add(back);
+      chair.add(at(cylinder(.03, .5, M.aluminium, 12), 0, .32, 0));
+      for (let i = 0; i < 5; i++) { const leg = box(.05, .03, .36, M.aluminium); leg.rotation.y = i * TAU / 5; leg.position.set(Math.sin(i * TAU / 5) * .17, .07, Math.cos(i * TAU / 5) * .17); chair.add(leg); }
+      return { group: d, screenTarget: new THREE.Vector3(x, F + 1.55, z - .2) };
+    }
+    const deskA = desk(-1.55, -.85, .05), deskB = desk(1.45, -.85, -.05);
+    deskA.group.add(at(cylinder(.07, .16, M.orange, 20), .8, 1.07, -.25));
+
+    // Network printer on a cabinet
+    const cab = new THREE.Group(); cab.position.set(2.55, F, 1.15); cab.rotation.y = -.5; group.add(cab);
+    cab.add(at(rounded(.95, .72, .7, .05, M.whiteMatte), 0, .36, 0));
+    cab.add(box(.85, .01, .01, M.aluminiumDark, 0, .36, .352));
+    cab.add(at(rounded(.85, .42, .66, .06, M.white), 0, .93, 0));
+    cab.add(box(.6, .04, .03, M.black, 0, .9, .33));
+    cab.add(box(.1, .025, .01, M.greenGlow, .3, 1.07, .332));
+    const page = new THREE.Mesh(new THREE.PlaneGeometry(.42, .55), docMat); page.rotation.x = -PI / 2 + .1; page.position.set(0, .82, .52); cab.add(page);
+
+    // Plant
+    const plant = new THREE.Group(); plant.position.set(-2.75, F, 1.35); group.add(plant);
+    plant.add(at(cylinder(.24, .45, M.orange, 28), 0, .225, 0));
+    [[0, .75, 0, .32], [.14, .95, .06, .24], [-.12, 1.0, -.05, .22]].forEach(([x, y, z, r]) => { const leaf = new THREE.Mesh(new THREE.IcosahedronGeometry(r, 2), M.sage); leaf.position.set(x, y, z); leaf.castShadow = true; plant.add(leaf); });
+
+    // Data links from the router to each device
+    const hub = new THREE.Vector3(.35, F + 1.75, -1.95);
+    const printerTarget = new THREE.Vector3(2.45, F + 1.2, 1.1);
+    const packets = [];
+    [deskA.screenTarget, deskB.screenTarget, printerTarget].forEach((end, i) => {
+      const mid = hub.clone().lerp(end, .5); mid.y += .7;
+      const curve = new THREE.QuadraticBezierCurve3(hub, mid, end);
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, .01, 6, false), M.signal.clone()); tube.material.opacity = .35; group.add(tube);
+      for (let j = 0; j < 2; j++) { const p = new THREE.Mesh(new THREE.SphereGeometry(.045, 12, 10), M.orangeGlow); group.add(p); packets.push({ mesh: p, curve, offset: (i * .33 + j * .5) % 1 }); }
+    });
+    return {
+      group, view: 4.4, target: new THREE.Vector3(0, 1.0, -.1), update(t) {
+        packets.forEach(({ mesh, curve, offset }) => { const p = phase(t, 2.8, offset * 2.8); mesh.position.copy(curve.getPointAt(p)); mesh.scale.setScalar(smooth(Math.min(p / .12, (1 - p) / .12))); });
+      }
+    };
+  }
+
   // Redraw once brand fonts have loaded.
   (document.fonts?.ready || Promise.resolve()).then(() => textures.forEach(t => t.redraw()));
 
-  return { create: type => ({ laptop: workstation, router: wifi, printer: scanner, setup, transfer, consult }[type] || workstation)() };
+  return { create: type => ({ laptop: workstation, router: wifi, printer: scanner, setup, transfer, consult, office }[type] || workstation)() };
 }

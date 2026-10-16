@@ -7,7 +7,7 @@ import {gzipSync} from 'node:zlib';
 const root=path.dirname(fileURLToPath(import.meta.url));
 const port=Number(process.env.WEIZTECH_PORT||5176);
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8'};
-const allowedFiles=new Set(['index.html','styles.css','script.js','scene.js','models.js','illustrations.js','motion.js','config.js','legal.js','impressum.html','datenschutz.html','robots.txt','sitemap.xml','tools/og-image.html']);
+const allowedFiles=new Set(['index.html','unternehmen.html','styles.css','script.js','scene.js','models.js','illustrations.js','motion.js','config.js','legal.js','impressum.html','datenschutz.html','robots.txt','sitemap.xml','tools/og-image.html']);
 const server=http.createServer(async(req,res)=>{
   if(!['GET','HEAD'].includes(req.method)){res.writeHead(405,{'Allow':'GET, HEAD'});return res.end();}
   try{
