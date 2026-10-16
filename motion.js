@@ -55,7 +55,7 @@
     priceAnimations.forEach(animation => animation?.cancel()); priceAnimations = [];
     const previous = lastPrice.padStart(next.length, ' ').slice(-next.length), increasing = Number(next) > Number(lastPrice);
     lastPrice = next;
-    if (state.paused || state.reduced) { price.textContent = next; return; }
+    if (state.paused || state.reduced || event.detail.instant) { price.textContent = next; return; }
     const accessible = document.createElement('span'); accessible.className = 'price-accessible'; accessible.textContent = next;
     const visual = document.createElement('span'); visual.className = 'price-digits'; visual.setAttribute('aria-hidden', 'true');
     [...next].forEach((digit, index) => {

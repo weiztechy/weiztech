@@ -31,6 +31,17 @@
     else swap();
   });
 
+  // Larger text, remembered per browser.
+  const textButton = document.getElementById('text-toggle');
+  function applyText(large, persist) {
+    if (large) root.dataset.text = 'large'; else delete root.dataset.text;
+    textButton?.setAttribute('aria-pressed', String(large));
+    textButton?.setAttribute('aria-label', large ? 'Normale Schrift aktivieren' : 'Größere Schrift aktivieren');
+    if (persist) { try { localStorage.setItem('weiztech-text', large ? 'large' : 'normal'); } catch {} }
+  }
+  applyText(root.dataset.text === 'large', false);
+  textButton?.addEventListener('click', () => applyText(root.dataset.text !== 'large', true));
+
   // Mobile navigation supports keyboard focus and Escape.
   const menuButton = $('.menu-toggle');
   const nav = $('#main-nav');
@@ -63,20 +74,34 @@
     if (phone?.link && link) link.href = `tel:${phone.link}`;
     if (phone?.display && display) display.textContent = phone.display;
   });
+  // WhatsApp links follow config.whatsapp; without a number they are removed.
+  const whatsapp = String(config.whatsapp || '').replace(/\D/g, '');
+  $$('[data-whatsapp]').forEach(link => {
+    if (!whatsapp) { link.remove(); return; }
+    link.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent('Hallo WeizTech, ich brauche Hilfe bei: ')}`;
+  });
+  if (!whatsapp) $('.mobile-cta')?.classList.add('mobile-cta-two');
   $$('[data-topic]').forEach(link => link.addEventListener('click', () => {
     if ($('#topic')) $('#topic').value = link.dataset.topic;
   }));
 
+  // Prices come from config.js; the seasonal offer ends on its own (see the inline check in <head>).
+  const promoActive = !root.classList.contains('promo-ended');
+  const prices = { first30: Number(config.prices?.first30) || 45, extra30: Number(config.prices?.extra30) || 20 };
+  const firstPrice = promoActive && config.promo?.first30 ? Number(config.promo.first30) : prices.first30;
+  const priceFor = minutes => firstPrice + Math.max(0, Math.ceil((minutes - 30) / 30)) * prices.extra30;
+  window.WEIZTECH_PRICES = { priceFor, promoActive };
+
   // Price estimate.
   let duration = 30;
   const area = $('#service-area');
-  function updateEstimate() {
-    const total = 35 + ((duration - 30) / 30) * 20;
+  function updateEstimate(instant = false) {
+    const total = priceFor(duration);
     const outside = area?.value === 'outside';
     if (!$('#price-total')) return;
     $('#price-duration').textContent = duration === 30 ? 'für die ersten 30 Minuten' : `für ${duration} Minuten Arbeitszeit`;
     $('.price-old').hidden = duration !== 30;
-    document.dispatchEvent(new CustomEvent('weiztech:estimate', { detail: { total, duration } }));
+    document.dispatchEvent(new CustomEvent('weiztech:estimate', { detail: { total, duration, instant } }));
     $('#estimate-description').textContent = `${duration} Minuten Arbeitszeit`;
     $('#estimate-total').textContent = `${total} €`;
     $('#travel-description').textContent = outside ? 'Zusätzliche Anfahrt' : 'Anfahrt in Weiz';
@@ -90,11 +115,85 @@
     duration = Number(button.dataset.duration);
     updateEstimate();
   }));
-  area?.addEventListener('change', updateEstimate);
+  area?.addEventListener('change', () => updateEstimate());
+  updateEstimate(true);
+  window.WEIZTECH_SET_DURATION = minutes => { if ([30, 60, 90, 120].includes(minutes)) { duration = minutes; updateEstimate(); } };
   $('#estimate-cta')?.addEventListener('click', () => {
     const location = $('#location');
     if (area?.value === 'weiz' && location && !location.value.trim()) location.value = 'Weiz';
   });
+
+  // "Was ist los?" helper. Durations are rough guide values in minutes; edit freely.
+  const problems = [
+    { label: 'Computer ist langsam', icon: 'i-laptop', topic: 'PC oder Laptop', min: 30, max: 60,
+      text: 'Oft stecken Autostart-Programme, ein voller Speicher oder fehlende Updates dahinter. Wir prüfen das Gerät, räumen auf und sagen ehrlich, ob sich ein Aufrüsten lohnt.' },
+    { label: 'Fehlermeldung oder startet nicht', icon: 'i-alert', topic: 'PC oder Laptop', min: 30, max: 60,
+      text: 'Fotografieren Sie die Meldung, wenn möglich. Wir finden die Ursache vor Ort und erklären, was zu tun ist. Ist eine Werkstatt nötig, sagen wir es offen.' },
+    { label: 'WLAN schwach oder bricht ab', icon: 'i-wifi', topic: 'WLAN oder Internet', min: 30, max: 60,
+      text: 'Wir prüfen Router-Standort, Funkkanal und Einstellungen und verbinden Ihre Geräte neu. Bei großen Wohnungen beraten wir zu Repeatern oder Mesh-Systemen.' },
+    { label: 'Drucker druckt nicht', icon: 'i-printer', topic: 'Drucker oder Zubehör', min: 30, max: 30,
+      text: 'Meist liegt es an der Verbindung oder am Treiber. Wir richten den Drucker neu ein – auf Wunsch auch fürs Drucken vom Handy.' },
+    { label: 'Neues Gerät einrichten', icon: 'i-spark', topic: 'Einrichtung', min: 60, max: 90,
+      text: 'Wir richten Konto, E-Mail, WLAN und Ihre wichtigsten Programme ein und zeigen Ihnen in Ruhe, wie alles funktioniert.' },
+    { label: 'Daten aufs neue Gerät', icon: 'i-transfer', topic: 'Datenübertragung', min: 60, max: 120,
+      text: 'Fotos, Dokumente, Kontakte: Wir übertragen alles Wichtige und prüfen gemeinsam mit Ihnen, dass nichts fehlt. Die Dauer hängt von der Datenmenge ab.' },
+    { label: 'Verdächtige Nachricht oder Virus?', icon: 'i-shield', topic: 'Anderes', min: 30, max: 60, urgent: true,
+      text: 'Geben Sie keine Passwörter oder Codes ein und rufen Sie keine Nummern aus der Nachricht zurück. Wir prüfen Ihr Gerät und zeigen, woran man Betrugsversuche erkennt.' },
+    { label: 'Welches Gerät soll ich kaufen?', icon: 'i-cart', topic: 'Kaufberatung', min: 30, max: 60,
+      text: 'Wir klären, wofür Sie das Gerät brauchen, und empfehlen passende Modelle – unabhängig und ohne Verkaufsdruck.' }
+  ];
+  const finderOptions = $('#finder-options');
+  const finderResult = $('#finder-result');
+  const icon = id => `<svg class="icon" aria-hidden="true"><use href="#${id}"/></svg>`;
+  const escapeHtml = text => text.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const minutesText = (a, b) => a === b ? `ca. ${a} Minuten` : `ca. ${a}–${b} Minuten`;
+  const euroText = (a, b) => a === b ? `${a} €` : `${a}–${b} €`;
+  function goTo(id, focusEl) {
+    const target = document.getElementById(id);
+    target?.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+    if (focusEl) setTimeout(() => focusEl.focus({ preventScroll: true }), reducedMotion.matches ? 0 : 600);
+  }
+  function showProblem(index) {
+    const p = problems[index];
+    $$('#finder-options button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
+    const phone = config.phones?.[0] || { display: '0650 709 25 27', link: '+436507092527' };
+    finderResult.innerHTML = `
+      <div class="finder-card">
+        <span class="finder-card-icon${p.urgent ? ' is-urgent' : ''}">${icon(p.icon)}</span>
+        <h3>${escapeHtml(p.label)}</h3>
+        <p>${escapeHtml(p.text)}</p>
+        ${p.urgent ? `<a class="finder-urgent" href="tel:${escapeHtml(phone.link)}">${icon('i-phone')}<span><strong>Dringend?</strong> Rufen Sie uns direkt an: ${escapeHtml(phone.display)}</span></a>` : ''}
+        <dl class="finder-facts">
+          <div><dt>${icon('i-clock')} Richtwert</dt><dd>${minutesText(p.min, p.max)}</dd></div>
+          <div><dt>${icon('i-tag')} Kosten</dt><dd>${euroText(priceFor(p.min), priceFor(p.max))}</dd></div>
+        </dl>
+        <p class="fine-print">Unverbindliche Einschätzung. Abgerechnet wird die tatsächliche Arbeitszeit${area?.value === 'outside' ? ' zuzüglich Anfahrt' : ', Anfahrt in Weiz inklusive'}.</p>
+        <div class="finder-actions">
+          <button type="button" class="button button-primary" data-finder-request>Damit anfragen ${icon('i-arrow')}</button>
+          <button type="button" class="button button-secondary" data-finder-calc>Im Rechner ansehen</button>
+        </div>
+      </div>`;
+    finderResult.querySelector('[data-finder-request]').addEventListener('click', () => {
+      const topic = $('#topic'), message = $('#message');
+      if (topic) topic.value = p.topic;
+      if (message && (!message.value.trim() || message.dataset.prefilled === message.value)) {
+        message.value = `Problem: ${p.label}\n`;
+        message.dataset.prefilled = message.value;
+      }
+      goTo('kontakt', message);
+    });
+    finderResult.querySelector('[data-finder-calc]').addEventListener('click', () => {
+      window.WEIZTECH_SET_DURATION?.(p.min);
+      goTo('preise', document.querySelector(`[data-duration="${p.min}"]`));
+    });
+  }
+  if (finderOptions && finderResult) {
+    finderOptions.innerHTML = problems.map((p, i) => `<button type="button" aria-pressed="false" data-problem="${i}">${icon(p.icon)}<span>${escapeHtml(p.label)}</span></button>`).join('');
+    finderOptions.addEventListener('click', event => {
+      const button = event.target.closest('[data-problem]');
+      if (button) showProblem(Number(button.dataset.problem));
+    });
+  }
 
   // Keep mobile actions clear of the enquiry form.
   if ('IntersectionObserver' in window) {
@@ -158,6 +257,9 @@
       consent: data.get('consent') === 'on', website: value('website'), startedAt: formStartedAt
     };
     if (payload.website) return;
+    // Preferred callback time travels inside the message so the backend payload stays unchanged.
+    const callback = value('callback');
+    if (callback && payload.message) payload.message = `${payload.message}\n\nAm besten erreichbar: ${callback}`.slice(0, 3000);
     for (const field of ['name', 'phone', 'location', 'topic', 'message']) {
       if (!payload[field]) {
         setStatus('Bitte füllen Sie alle Pflichtfelder aus.');

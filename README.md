@@ -16,7 +16,22 @@ Double-click Start-Website.cmd (Node.js required, no install or build step) and 
 - **Interaction.** Device tabs, a "try it" action per device, drag (or arrow keys) to rotate, and a status card. Animations can be paused in the hero and the footer; reduced-motion preferences are respected.
 - **Removed:** the scroll-driven "Zusammenspiel" story and the logo sculpture section, to keep the page focused.
 
-The contact form keeps the original backend URL, payload, timeout and e-mail fallback. Prices and legal text are unchanged.
+The contact form keeps the original backend URL, payload, timeout and e-mail fallback. Legal text is unchanged.
+
+## Everyday changes (config.js)
+
+- **Prices:** `prices.first30` (first 30 minutes) and `prices.extra30` (each further started 30 minutes). The calculator and the problem helper use these values.
+- **Seasonal offer:** `promo` holds the offer price and its end moment. The Herbst-Aktion runs up to and including 30 November 2026 (`ends: "2026-12-01T00:00:00+01:00"`). From then on the banner, offer badges and struck-through prices disappear by themselves, and every price shows the regular 45 €. In index.html, promo-only text carries `data-promo` and its regular replacement carries `data-regular`. For a new offer, change `promo` and, if needed, the dates written in those texts ("bis 30. November").
+- **WhatsApp:** `whatsapp` is the number in international format without "+". Leave it empty to remove every WhatsApp button.
+
+## More features
+
+- **"Was ist los?" helper** (below the services): visitors pick a symptom and see what we do, a rough time and cost range, and buttons to pre-fill the form or open the calculator. The entries and their minute ranges are the `problems` list in script.js.
+- **Larger text:** the "A+" button in the header enlarges all text by 15 % on every page and is remembered per browser.
+- **Callback time:** the form asks for the preferred time of day. It is added to the end of the message, so the backend payload is unchanged.
+- **Social preview image:** assets/og-image.png (1200×630) is used when the site is shared on WhatsApp, Facebook and similar. To re-render it after design changes, start the preview server and run:
+  `"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --enable-unsafe-swiftshader --use-angle=swiftshader --hide-scrollbars --window-size=1200,630 --virtual-time-budget=15000 --screenshot="%CD%\assets\og-image.png" http://127.0.0.1:5176/tools/og-image.html`
+  tools/og-image.html is only needed for this and does not have to be uploaded.
 
 ## Files
 
@@ -27,7 +42,8 @@ The contact form keeps the original backend URL, payload, timeout and e-mail fal
 - scene.js: one shared WebGL renderer, hero stage, service scenes, neighbourhood model.
 - models.js: materials, geometry helpers and the three hero devices.
 - illustrations.js: six service illustrations.
-- legal.js: theme toggle for the legal pages.
+- legal.js: theme and text-size toggles for the legal pages.
+- tools/og-image.html: renders the social preview image (development only).
 - config.js: contact and backend configuration.
 - impressum.html, datenschutz.html: legal pages.
 - server.mjs, Start-Website.cmd: local preview only.

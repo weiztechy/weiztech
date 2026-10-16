@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de-AT">
+<head>
+<meta charset="utf-8">
+<title>WeizTech social preview (1200×630)</title>
+<!-- Development tool: renders the link-preview image. See README ("Social preview image"). -->
+<link rel="stylesheet" href="../styles.css">
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#fff}
+  .og{position:relative;width:1200px;height:630px;display:grid;grid-template-columns:640px 560px;isolation:isolate}
+  .og::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(55% 75% at 78% 50%,#fff1dc,transparent 70%)}
+  .og::after{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(#ecebe7 1px,transparent 1px),linear-gradient(90deg,#ecebe7 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(60% 80% at 75% 50%,#000,transparent 75%);-webkit-mask-image:radial-gradient(60% 80% at 75% 50%,#000,transparent 75%)}
+  .copy{display:flex;flex-direction:column;padding:64px 0 60px 72px}
+  .brand{gap:14px}
+  .brand-mark{width:64px;height:40px}
+  .brand-word{font-size:2.3rem}
+  h1{margin:auto 0 22px;font-size:68px;line-height:1.02;letter-spacing:-.035em}
+  h1 em{font-style:normal;color:#f58a00}
+  .sub{margin:0 0 34px;font-size:25px;line-height:1.45;color:#3b4048;max-width:520px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{margin:0;font-size:19px;padding:10px 18px;color:#121418}
+  .chip strong{font-weight:800}
+  .art{position:relative}
+  canvas{position:absolute;inset:0;width:560px;height:630px}
+</style>
+</head>
+<body>
+<div class="og">
+  <div class="copy">
+    <span class="brand">
+      <svg class="brand-mark" viewBox="0 0 312 196" aria-hidden="true"><path class="mark-ink" d="M5 10h49l84 156-36 24z"/><path class="mark-ink" d="M87 10h49l82 156-35 24z"/><path class="mark-accent" d="M207 68 254 5h52l-64 122z"/></svg>
+      <span class="brand-word">Weiz<span>Tech</span></span>
+    </span>
+    <h1>Computerhilfe, die zu Ihnen <em>kommt.</em></h1>
+    <p class="sub">PC, Laptop, WLAN &amp; Drucker – persönlich vor Ort in Weiz und Umgebung.</p>
+    <div class="chips">
+      <span class="chip"><span class="status-dot"></span> Anfahrt in Weiz inklusive</span>
+      <span class="chip"><strong>0650 709 25 27</strong></span>
+    </div>
+  </div>
+  <div class="art"><canvas id="c" width="1120" height="1260"></canvas></div>
+</div>
+<script type="module">
+import * as THREE from '../assets/vendor/three.module.min.js';
+import { createMaterials, createDevices, cylinder } from '../models.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(1120, 1260, false);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+renderer.setClearColor(0, 0);
+
+const studio = new THREE.Scene(); studio.background = new THREE.Color(0x868b92);
+const panel = (w, h, c, p) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(...c), side: THREE.DoubleSide })); m.position.set(...p); m.lookAt(0, 0, 0); studio.add(m); };
+panel(12, 8, [3.2, 3.2, 3.2], [0, 9, 1]); panel(3, 10, [2.4, 2.45, 2.6], [-8, 3, 2]); panel(3, 10, [2.6, 2.3, 2.0], [8, 3, -1]);
+panel(14, 6, [.9, .9, .92], [0, 2, -9]); panel(10, 4, [1.4, 1.4, 1.4], [0, 2, 9]); panel(30, 30, [.22, .22, .23], [0, -4, 0]);
+const pmrem = new THREE.PMREMGenerator(renderer);
+const scene = new THREE.Scene(); scene.environment = pmrem.fromScene(studio, .035).texture;
+scene.add(new THREE.HemisphereLight(0xffffff, 0xcfc8bc, .7));
+const key = new THREE.DirectionalLight(0xffffff, 2.3); key.position.set(-3, 12, 5); key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
+Object.assign(key.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: .5, far: 30 }); key.shadow.radius = 6; key.shadow.bias = -.0004; key.shadow.normalBias = .02;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xfff2e2, .7); fill.position.set(6, 4, 5); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xe4ecff, 1.3); rim.position.set(3, 6, -8); scene.add(rim);
+
+const M = createMaterials(); M.setTheme(false);
+const plinth = cylinder(3.15, .22, M.plinth, 96); plinth.position.y = .11; plinth.castShadow = false; scene.add(plinth);
+const ring = new THREE.Mesh(new THREE.TorusGeometry(3.12, .018, 8, 160), M.orangeGlow); ring.rotation.x = -Math.PI / 2; ring.position.y = .224; scene.add(ring);
+const camera = new THREE.PerspectiveCamera(24, 1120 / 1260, .1, 200);
+const target = new THREE.Vector3(.45, 1.25, 0);
+camera.position.copy(target).addScaledVector(new THREE.Vector3(1.05, .78, 2.1).normalize(), 17.4);
+camera.lookAt(target);
+
+const devices = createDevices(renderer, M, () => {
+  renderer.render(scene, camera);
+  document.title = 'ready';
+});
+devices.laptop.position.y = .22; devices.laptop.rotation.y = -.32; scene.add(devices.laptop);
+renderer.render(scene, camera);
+</script>
+</body>
+</html>
